@@ -7,7 +7,9 @@ public sealed class SortWorkTime(
 {
     public async Task CreateChunks()
     {
-        using var scope = trace.Scope(nameof(CreateChunks));
+        using var scope = trace.Scope(
+            nameof(ISort), nameof(CreateChunks));
+
         await decoratee.CreateChunks();
     }
 
@@ -16,13 +18,17 @@ public sealed class SortWorkTime(
 
     public async Task Execute()
     {
-        using var scope = trace.Scope(nameof(Execute));
+        using var scope = trace.Scope(
+            nameof(ISort), nameof(Execute));
+
         await decoratee.Execute();
     }
 
     public async Task MergeChunks()
     {
-        using var scope = trace.Scope(nameof(MergeChunks));
+        using var scope = trace.Scope(
+            nameof(ISort), nameof(MergeChunks));
+
         await decoratee.MergeChunks();
     }
 }

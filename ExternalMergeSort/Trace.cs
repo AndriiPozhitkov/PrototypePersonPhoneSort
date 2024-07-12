@@ -4,8 +4,8 @@ namespace ExternalMergeSort;
 
 public sealed class Trace : ITrace
 {
-    public ITraceScope Scope(string label) =>
-        new TraceScope(label, this);
+    public ITraceScope Scope(string type, string method) =>
+        new TraceScope(type, method, this);
 
     public void WriteLine(string line)
     {

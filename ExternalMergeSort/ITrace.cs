@@ -2,11 +2,7 @@
 
 public interface ITrace
 {
-    ITraceScope Scope(string label);
+    ITraceScope Scope(string type, string method);
 
     void WriteLine(string line);
-}
-
-public interface ITraceScope : IDisposable
-{
 }

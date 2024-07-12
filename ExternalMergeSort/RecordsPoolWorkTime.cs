@@ -7,7 +7,9 @@ public sealed class RecordsPoolWorkTime(
 {
     public async Task<IChunk> ReadChunk(IReader reader)
     {
-        using var scope = trace.Scope(nameof(ReadChunk));
+        using var scope = trace.Scope(
+            nameof(IRecordsPool), nameof(ReadChunk));
+
         return new ChunkWorkTime(trace, await decoratee.ReadChunk(reader));
     }
 }

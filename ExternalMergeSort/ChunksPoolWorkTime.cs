@@ -7,7 +7,9 @@ public sealed class ChunksPoolWorkTime(
 {
     public async Task CreateChunkFile(IChunk chunk)
     {
-        using var scope = trace.Scope(nameof(CreateChunkFile));
+        using var scope = trace.Scope(
+            nameof(IChunksPool), nameof(CreateChunkFile));
+
         await decoratee.CreateChunkFile(chunk);
     }
 
@@ -16,7 +18,9 @@ public sealed class ChunksPoolWorkTime(
 
     public async Task MergeChunks(IWriter output)
     {
-        using var scope = trace.Scope(nameof(MergeChunks));
+        using var scope = trace.Scope(
+            nameof(IChunksPool), nameof(MergeChunks));
+
         await decoratee.MergeChunks(output);
     }
 }

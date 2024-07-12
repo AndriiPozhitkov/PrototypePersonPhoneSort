@@ -10,13 +10,17 @@ public sealed class ChunkWorkTime(
 
     public void Sort()
     {
-        using var scope = trace.Scope(nameof(Sort));
+        using var scope = trace.Scope(
+            nameof(IChunk), nameof(Sort));
+
         decoratee.Sort();
     }
 
     public async Task Write(IWriter writer)
     {
-        using var scope = trace.Scope(nameof(Write));
+        using var scope = trace.Scope(
+            nameof(IChunk), nameof(Write));
+
         await decoratee.Write(writer);
     }
 }

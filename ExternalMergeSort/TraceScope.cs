@@ -8,11 +8,11 @@ public sealed class TraceScope : ITraceScope
     private readonly ITrace _trace;
     private readonly Stopwatch _workTime;
 
-    public TraceScope(string label, ITrace trace)
+    public TraceScope(string type, string method, ITrace trace)
     {
-        _label = label;
+        _label = type + "." + method;
         _trace = trace;
-        _trace.WriteLine(label + "...");
+        _trace.WriteLine($"{_label}...");
         _workTime = Stopwatch.StartNew();
     }
 
