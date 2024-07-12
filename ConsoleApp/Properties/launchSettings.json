@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "scan C:\\Temp\\persons_8DCA2A892DD8497.csv"
+      "commandLineArgs": "sort C:\\Temp\\persons_8DCA2A892DD8497.csv"
     }
   }
 }

@@ -4,6 +4,9 @@ namespace App;
 
 public class CommandSort(Args args) : ICommand
 {
+    private const long A = 75_350_016; // expected_pool_size_min 
+    private int B = (int)(A * 10 / 100);
+
     public static bool IsMy(Args args) =>
         args.FirstArgIs("sort") || args.FirstArgIsFile();
 
@@ -19,11 +22,11 @@ public class CommandSort(Args args) : ICommand
             readerFactory,
             writerFactory);
 
-        var chunksPool = 
+        var chunksPool =
             new ChunksPoolWorkTime(trace,
             new ChunksPool(chunkFileFactory));
-        
-        var recordsPoolSize = new RecordsPoolSizeFixed(10);
+
+        var recordsPoolSize = new RecordsPoolSizeFixed(B);
 
         var recordsPool =
             new RecordsPoolWorkTime(trace,
