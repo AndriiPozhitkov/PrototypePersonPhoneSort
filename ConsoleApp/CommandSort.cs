@@ -32,15 +32,18 @@ public class CommandSort(Args args) : ICommand
         var inputFile = args.InputFile();
         var outputFile = args.OutputFile();
 
-        using var sort =
+        using (var sort =
             new SortWorkTime(trace,
             new Sort(
                 chunksPool,
                 inputFile,
                 outputFile,
-                recordsPool));
+                recordsPool)))
+        {
+            await sort.Execute();
+        }
 
-        await sort.Execute();
+        trace.WriteStatistics();
 
         return Status.Ok();
     }

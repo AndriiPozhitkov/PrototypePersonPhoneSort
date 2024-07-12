@@ -20,5 +20,6 @@ public sealed class TraceScope : ITraceScope
     {
         _workTime.Stop();
         _trace.WriteLine($"{_label} {_workTime.Elapsed:g}");
+        _trace.AddScopeStatistics(_label, _workTime.Elapsed);
     }
 }

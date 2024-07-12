@@ -6,7 +6,7 @@ namespace ExternalMergeSort.Test;
 public class GenerateTestFile
 {
     private const char FieldDelimiter = ';';
-    private const long FileMaxSizeByte = 4U * 1024U;
+    private const long FileMaxSizeByte = 4 * 1024; // 4_294_967_296;
     private const string TempDir = "C:\\Temp";
 
     //[Fact]
@@ -20,7 +20,6 @@ public class GenerateTestFile
         while (w.BaseStream.Length < FileMaxSizeByte)
         {
             faker.Generate().Write(w);
-            w.Flush();
         }
     }
 
