@@ -1,6 +1,6 @@
 ﻿namespace ExternalMergeSort;
 
-public sealed class Chunk
+public sealed class Chunk : IChunk
 {
     private static readonly RecordComparer Comparer = new();
 

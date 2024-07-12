@@ -1,6 +1,6 @@
 ﻿namespace ExternalMergeSort;
 
-public sealed class RecordsPool
+public sealed class RecordsPool : IRecordsPool
 {
     private readonly List<Record> _records;
     private readonly IRecordsPoolSize _size;
@@ -11,7 +11,7 @@ public sealed class RecordsPool
         _records = _size.Records();
     }
 
-    public async Task<Chunk> ReadChunk(IReader reader)
+    public async Task<IChunk> ReadChunk(IReader reader)
     {
         var count = 0;
 
@@ -25,6 +25,6 @@ public sealed class RecordsPool
             count++;
         }
 
-        return new(count, _records);
+        return new Chunk(count, _records);
     }
 }

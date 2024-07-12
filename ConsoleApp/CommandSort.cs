@@ -12,21 +12,33 @@ public class CommandSort(Args args) : ICommand
         var tempFileFactory = new OsTempFileFactory();
         var readerFactory = new ReaderFactory();
         var writerFactory = new WriterFactory();
+        var trace = new Trace();
 
         var chunkFileFactory = new ChunkFileFactory(
             tempFileFactory,
             readerFactory,
             writerFactory);
 
+        var chunksPool = 
+            new ChunksPoolWorkTime(trace,
+            new ChunksPool(chunkFileFactory));
+        
         var recordsPoolSize = new RecordsPoolSizeFixed(10);
+
+        var recordsPool =
+            new RecordsPoolWorkTime(trace,
+            new RecordsPool(recordsPoolSize));
+
         var inputFile = args.InputFile();
         var outputFile = args.OutputFile();
 
-        using var sort = new Sort(
-            chunkFileFactory,
-            recordsPoolSize,
-            inputFile,
-            outputFile);
+        using var sort =
+            new SortWorkTime(trace,
+            new Sort(
+                chunksPool,
+                inputFile,
+                outputFile,
+                recordsPool));
 
         await sort.Execute();
 

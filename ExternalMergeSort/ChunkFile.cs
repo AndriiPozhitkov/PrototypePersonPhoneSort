@@ -65,7 +65,7 @@ public sealed class ChunkFile : IDisposable
         }
     }
 
-    public async Task Write(Chunk chunk)
+    public async Task Write(IChunk chunk)
     {
         using (var writer = _writerFactory.Writer(_file))
         {

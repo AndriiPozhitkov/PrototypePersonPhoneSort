@@ -1,6 +1,6 @@
 ﻿namespace ExternalMergeSort;
 
-public sealed class ChunksPool : IDisposable
+public sealed class ChunksPool : IChunksPool
 {
     private readonly IChunkFileFactory _chunkFileFactory;
     private readonly List<ChunkFile> _chunkFiles = [];
@@ -8,7 +8,7 @@ public sealed class ChunksPool : IDisposable
     public ChunksPool(IChunkFileFactory chunkFileFactory) =>
         _chunkFileFactory = chunkFileFactory;
 
-    public async Task CreateChunkFile(Chunk chunk)
+    public async Task CreateChunkFile(IChunk chunk)
     {
         var chunkFile = _chunkFileFactory.CreateChunkFile();
         _chunkFiles.Add(chunkFile);
@@ -17,7 +17,7 @@ public sealed class ChunksPool : IDisposable
 
     public void Dispose()
     {
-        foreach(var chunkFile in _chunkFiles)
+        foreach (var chunkFile in _chunkFiles)
             chunkFile.Dispose();
     }
 
@@ -38,7 +38,7 @@ public sealed class ChunksPool : IDisposable
         var minimal = _chunkFiles[0];
         await minimal.ReadNextRecord();
 
-        for(var i = 1; i < _chunkFiles.Count; i++)
+        for (var i = 1; i < _chunkFiles.Count; i++)
         {
             var chunkFile = _chunkFiles[i];
             await chunkFile.ReadNextRecord();

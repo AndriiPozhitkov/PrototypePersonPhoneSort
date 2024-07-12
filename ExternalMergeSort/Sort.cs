@@ -1,22 +1,22 @@
 ﻿namespace ExternalMergeSort;
 
-public sealed class Sort : IDisposable
+public sealed class Sort : ISort
 {
-    private readonly ChunksPool _chunksPool;
+    private readonly IChunksPool _chunksPool;
     private readonly FileInfo _inputFile;
     private readonly FileInfo _outputFile;
-    private readonly RecordsPool _recordsPool;
+    private readonly IRecordsPool _recordsPool;
 
     public Sort(
-        IChunkFileFactory chunkFileFactory,
-        IRecordsPoolSize recordsPoolSize,
+        IChunksPool chunksPool,
         FileInfo inputFile,
-        FileInfo outputFile)
+        FileInfo outputFile,
+        IRecordsPool recordsPool)
     {
-        _recordsPool = new(recordsPoolSize);
-        _chunksPool = new(chunkFileFactory);
+        _chunksPool = chunksPool;
         _inputFile = inputFile;
         _outputFile = outputFile;
+        _recordsPool = recordsPool;
     }
 
     public void Dispose() =>
@@ -28,7 +28,7 @@ public sealed class Sort : IDisposable
         await MergeChunks();
     }
 
-    private async Task CreateChunks()
+    public async Task CreateChunks()
     {
         using var input = new FileReader(_inputFile);
 
@@ -42,7 +42,7 @@ public sealed class Sort : IDisposable
         }
     }
 
-    private async Task MergeChunks()
+    public async Task MergeChunks()
     {
         using var output = new FileWriter(_outputFile);
         await _chunksPool.MergeChunks(output);
