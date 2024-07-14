@@ -23,5 +23,5 @@ public sealed class InputFileBuffer
         _context.Read(reader);
 
     public byte TestByte(int index) =>
-        _context.TestByte(index);
+        _context[index];
 }
