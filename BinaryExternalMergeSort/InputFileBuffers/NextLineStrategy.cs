@@ -1,15 +1,15 @@
-﻿namespace BinaryExternalMergeSort;
+﻿namespace BinaryExternalMergeSort.InputFileBuffers;
 
-public sealed class NextLineIndexStrategy(InputFileBufferContext context)
+public sealed class NextLineStrategy(Context context)
 {
     private const byte CR = 0x0D; // 13 \r
     private const byte LF = 0x0A; // 10 \n
     private const int EOL = -1;
 
     private int _index;
-    private NextLineState _state;
+    private State _state;
 
-    private enum NextLineState
+    private enum State
     {
         None,
         Line,
@@ -17,10 +17,10 @@ public sealed class NextLineIndexStrategy(InputFileBufferContext context)
         EOL
     }
 
-    public int NextLineIndex() => _state switch
+    public int Index() => _state switch
     {
-        NextLineState.None => None(),
-        NextLineState.Line => Line(),
+        State.None => None(),
+        State.Line => Line(),
         _ => EOL,
     };
 
@@ -28,7 +28,7 @@ public sealed class NextLineIndexStrategy(InputFileBufferContext context)
     {
         if (context.IsReadedGtZero)
         {
-            _state = NextLineState.Line;
+            _state = State.Line;
             _index = 0;
             return _index;
         }
@@ -37,18 +37,18 @@ public sealed class NextLineIndexStrategy(InputFileBufferContext context)
 
     private int Line()
     {
-        _state = NextLineState.SeekEOL;
+        _state = State.SeekEOL;
         for (; _index < context.Readed; _index++)
         {
             var item = context[_index];
             var itemIsEOL = item == CR || item == LF;
-            if (_state == NextLineState.SeekEOL && itemIsEOL)
+            if (_state == State.SeekEOL && itemIsEOL)
             {
-                _state = NextLineState.EOL;
+                _state = State.EOL;
             }
-            else if (_state == NextLineState.EOL && !itemIsEOL)
+            else if (_state == State.EOL && !itemIsEOL)
             {
-                _state = NextLineState.Line;
+                _state = State.Line;
                 return _index;
             }
         }
