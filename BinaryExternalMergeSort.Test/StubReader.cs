@@ -2,8 +2,8 @@
 
 internal sealed class StubReader : IReader
 {
-    private const char FD = ';';
     private const char CR = '\r';
+    private const char FD = ';';
     private const char LF = '\n';
 
     private readonly int _lineSize;
@@ -34,24 +34,30 @@ internal sealed class StubReader : IReader
         return Task.FromResult(readed);
     }
 
-    internal static StubReader Lines(int count) =>
-        Lines(count, "L", "F", "M", "P");
-
-    internal static StubReader Lines(
-        int count, string last, string first, string middle, string phone)
+    internal static StubReader Lines(int count)
     {
+        int n = -1;
+        char N()
+        {
+            n++;
+            if (n > 9) n = 0;
+            return (char)(0x30 + n);
+        }
+
         using var memory = new MemoryStream();
         using var w = new StreamWriter(memory);
         var lineSize = 0;
+
         for (int i = 0; i < count; i++)
         {
-            w.Write(last);
+            n = i - 1;
+            w.Write(N());
             w.Write(FD);
-            w.Write(first);
+            w.Write(N());
             w.Write(FD);
-            w.Write(middle);
+            w.Write(N());
             w.Write(FD);
-            w.Write(phone);
+            w.Write(N());
             w.Write(CR);
             w.Write(LF);
         }
@@ -60,9 +66,9 @@ internal sealed class StubReader : IReader
         return new(memory.ToArray(), lineSize);
     }
 
-    internal int LineSize_0_5() => _lineSize / 2;
+    internal int HalfLine() => _lineSize / 2;
 
-    internal int LineSize_1_0() => _lineSize;
+    internal int OneAndHalfLine() => _lineSize * 3 / 2;
 
-    internal int LineSize_1_5() => _lineSize * 3 / 2;
+    internal int OneLine() => _lineSize;
 }

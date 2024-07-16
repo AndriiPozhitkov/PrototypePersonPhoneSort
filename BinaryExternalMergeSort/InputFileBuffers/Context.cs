@@ -1,4 +1,6 @@
-﻿namespace BinaryExternalMergeSort.InputFileBuffers;
+﻿using System.Diagnostics;
+
+namespace BinaryExternalMergeSort.InputFileBuffers;
 
 public sealed class Context
 {
@@ -10,6 +12,8 @@ public sealed class Context
 
     public Context(int size)
     {
+        Debug.Assert(size > 0);
+
         _buffer = new byte[size];
         _offset = 0;
         _count = _buffer.Length;
@@ -19,16 +23,15 @@ public sealed class Context
     public int Readed => _readed;
     public byte this[int index] => _buffer[index];
 
-    public void CopyPartialLineToBufferStart(int lineBeginIndex)
+    public void CopyPartialLineToStart(int partialLineBegin)
     {
-        _offset = _buffer.Length - lineBeginIndex;
-        Array.Copy(_buffer, lineBeginIndex, _buffer, 0, _offset);
+        Debug.Assert(partialLineBegin >= 0);
+        Debug.Assert(partialLineBegin < _buffer.Length);
+
+        _offset = _buffer.Length - partialLineBegin;
+        Array.Copy(_buffer, partialLineBegin, _buffer, 0, _offset);
     }
 
-    public async Task Read(IReader reader)
-    {
-        _offset = 0;
-        _count = _buffer.Length;
+    public async Task Read(IReader reader) =>
         _readed = await reader.Read(_buffer, _offset, _count);
-    }
 }

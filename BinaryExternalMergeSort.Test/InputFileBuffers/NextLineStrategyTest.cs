@@ -18,7 +18,7 @@ public class NextLineStrategyTest
     public async Task Index_one_full_line_and_partial_line()
     {
         using var reader = StubReader.Lines(2);
-        var context = new Context(reader.LineSize_1_5());
+        var context = new Context(reader.OneAndHalfLine());
         var sut = new NextLineStrategy(context);
 
         await context.Read(reader);
