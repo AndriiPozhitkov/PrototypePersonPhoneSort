@@ -1,37 +1,16 @@
-﻿using System.Diagnostics;
+﻿namespace BinaryExternalMergeSort.InputFileBuffers;
 
-namespace BinaryExternalMergeSort.InputFileBuffers;
-
-public sealed class Context
+public sealed class Context(int capacity)
 {
-    private readonly byte[] _buffer;
+    public readonly byte[] Buffer = new byte[capacity];
 
-    private int _count;
-    private int _offset;
-    private int _readed;
+    public int Offset;
+    public int LastLineBegin;
+    public int ReadCount;
+    public int Readed;
+    public int Size;
 
-    public Context(int size)
-    {
-        Debug.Assert(size > 0);
+    public byte TestByte(int index) => Buffer[index];
 
-        _buffer = new byte[size];
-        _offset = 0;
-        _count = _buffer.Length;
-    }
-
-    public bool IsReadedGtZero => _readed > 0;
-    public int Readed => _readed;
-    public byte this[int index] => _buffer[index];
-
-    public void CopyPartialLineToStart(int partialLineBegin)
-    {
-        Debug.Assert(partialLineBegin >= 0);
-        Debug.Assert(partialLineBegin < _buffer.Length);
-
-        _offset = _buffer.Length - partialLineBegin;
-        Array.Copy(_buffer, partialLineBegin, _buffer, 0, _offset);
-    }
-
-    public async Task Read(IReader reader) =>
-        _readed = await reader.Read(_buffer, _offset, _count);
+    public char TestChar(int index) => (char)Buffer[index];
 }

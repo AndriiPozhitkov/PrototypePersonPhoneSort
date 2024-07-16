@@ -7,6 +7,7 @@ public sealed class InputFileBuffer
     public const int MinBuffer = 4096;
 
     private readonly Context _context;
+    private readonly FillBufferStrategy _fillBuffer;
     private readonly NextLineStrategy _nextLine;
 
     public InputFileBuffer(int size)
@@ -15,6 +16,7 @@ public sealed class InputFileBuffer
             size, MinBuffer, nameof(size));
 
         _context = new(size);
+        _fillBuffer = new(_context);
         _nextLine = new(_context);
     }
 
@@ -22,8 +24,7 @@ public sealed class InputFileBuffer
         _nextLine.Index();
 
     public Task Read(IReader reader) =>
-        _context.Read(reader);
+        _fillBuffer.Read(reader);
 
-    public byte TestByte(int index) =>
-        _context[index];
+    public byte TestByte(int index) => _context.TestByte(index);
 }

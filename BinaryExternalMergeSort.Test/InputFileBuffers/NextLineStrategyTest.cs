@@ -19,9 +19,11 @@ public class NextLineStrategyTest
     {
         using var reader = StubReader.Lines(2);
         var context = new Context(reader.OneAndHalfLine());
+        var fillBuffer = new FillBufferStrategy(context);
         var sut = new NextLineStrategy(context);
 
-        await context.Read(reader);
+        await fillBuffer.Read(reader);
+
         Assert.Equal(0, sut.Index());
         Assert.Equal(9, sut.Index());
         Assert.Equal(-1, sut.Index());

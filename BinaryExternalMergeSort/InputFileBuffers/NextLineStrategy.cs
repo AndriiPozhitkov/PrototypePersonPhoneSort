@@ -26,7 +26,7 @@ public sealed class NextLineStrategy(Context context)
 
     private int None()
     {
-        if (context.IsReadedGtZero)
+        if (context.Readed > 0)
         {
             _state = State.Line;
             _index = 0;
@@ -40,7 +40,7 @@ public sealed class NextLineStrategy(Context context)
         _state = State.SeekEOL;
         for (; _index < context.Readed; _index++)
         {
-            var item = context[_index];
+            var item = context.Buffer[_index];
             var itemIsEOL = item == CR || item == LF;
             if (_state == State.SeekEOL && itemIsEOL)
             {
