@@ -26,10 +26,11 @@ public sealed class NextLineStrategy(Context context)
 
     private int None()
     {
-        if (context.Readed > 0)
+        if (context.Size > 0)
         {
             _state = State.Line;
             _index = 0;
+            context.LastLineBegin = _index;
             return _index;
         }
         return EOL;
@@ -37,18 +38,20 @@ public sealed class NextLineStrategy(Context context)
 
     private int Line()
     {
+        var buffer = context.Buffer;
         _state = State.SeekEOL;
-        for (; _index < context.Readed; _index++)
+        for (; _index < context.Size; _index++)
         {
-            var item = context.Buffer[_index];
-            var itemIsEOL = item == CR || item == LF;
-            if (_state == State.SeekEOL && itemIsEOL)
+            var symbol = buffer[_index];
+            var symbolIsEOL = symbol == CR || symbol == LF;
+            if (_state == State.SeekEOL && symbolIsEOL)
             {
                 _state = State.EOL;
             }
-            else if (_state == State.EOL && !itemIsEOL)
+            else if (_state == State.EOL && !symbolIsEOL)
             {
                 _state = State.Line;
+                context.LastLineBegin = _index;
                 return _index;
             }
         }

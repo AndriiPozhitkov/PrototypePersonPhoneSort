@@ -13,7 +13,6 @@ public class FillBufferStrategyTest
 
         await sut.Read(reader);
 
-        Assert.Equal(4, context.Readed);
         Assert.Equal(4, context.Size);
         Assert.Equal('0', context.TestChar(0));
         Assert.Equal(';', context.TestChar(1));
@@ -30,7 +29,6 @@ public class FillBufferStrategyTest
 
         await sut.Read(reader);
 
-        Assert.Equal(9, context.Readed);
         Assert.Equal(9, context.Size);
         Assert.Equal('0', context.TestChar(0));
         Assert.Equal(';', context.TestChar(1));
@@ -56,7 +54,6 @@ public class FillBufferStrategyTest
 
         await sut.Read(reader);
 
-        Assert.Equal(13, context.Readed);
         Assert.Equal('0', context.TestChar(0));
         Assert.Equal(';', context.TestChar(1));
         Assert.Equal('1', context.TestChar(2));
@@ -84,7 +81,6 @@ public class FillBufferStrategyTest
         context.LastLineBegin = 9;
         await sut.Read(reader);
 
-        Assert.Equal(5, context.Readed);
         Assert.Equal('1', context.TestChar(0));
         Assert.Equal(';', context.TestChar(1));
         Assert.Equal('2', context.TestChar(2));
