@@ -7,18 +7,18 @@ public sealed class FillBufferStrategy(Context context)
     public async Task<bool> Read(IReader reader)
     {
         context.ReadNumber++;
-        CopyPartialLineToStart();
+        CopyPartialRecordToStartOfBuffer();
         return await FillBuffer(reader);
     }
 
-    private void CopyPartialLineToStart()
+    private void CopyPartialRecordToStartOfBuffer()
     {
         var buffer = context.Buffer;
-        var lastLineBegin = context.LastLineBegin;
-        if (0 < lastLineBegin && lastLineBegin < buffer.Length)
+        var nextRecordBegin = context.NextRecordBegin;
+        if (0 < nextRecordBegin && nextRecordBegin < buffer.Length)
         {
-            _offset = buffer.Length - lastLineBegin;
-            Array.Copy(buffer, lastLineBegin, buffer, 0, _offset);
+            _offset = buffer.Length - nextRecordBegin;
+            Array.Copy(buffer, nextRecordBegin, buffer, 0, _offset);
         }
         else
         {

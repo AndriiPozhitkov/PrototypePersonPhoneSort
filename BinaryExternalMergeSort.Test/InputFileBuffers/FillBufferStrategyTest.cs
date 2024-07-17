@@ -11,7 +11,7 @@ public class FillBufferStrategyTest
         var context = new Context(reader.HalfLine());
         var sut = new FillBufferStrategy(context);
 
-        context.LastLineBegin = 0;
+        context.NextRecordBegin = 0;
         await sut.Read(reader);
 
         Assert.Equal(4, context.Size);
@@ -25,7 +25,7 @@ public class FillBufferStrategyTest
         var context = new Context(reader.OneAndHalfLine());
         var sut = new FillBufferStrategy(context);
 
-        context.LastLineBegin = 0;
+        context.NextRecordBegin = 0;
         await sut.Read(reader);
 
         Assert.Equal(9, context.Size);
@@ -39,7 +39,7 @@ public class FillBufferStrategyTest
         var context = new Context(reader.OneAndHalfLine());
         var sut = new FillBufferStrategy(context);
 
-        context.LastLineBegin = 0;
+        context.NextRecordBegin = 0;
         await sut.Read(reader);
 
         Assert.Equal(13, context.Size);
@@ -53,10 +53,10 @@ public class FillBufferStrategyTest
         var context = new Context(reader.OneAndHalfLine());
         var sut = new FillBufferStrategy(context);
 
-        context.LastLineBegin = 0;
+        context.NextRecordBegin = 0;
         await sut.Read(reader);
 
-        context.LastLineBegin = 9;
+        context.NextRecordBegin = 9;
         await sut.Read(reader);
 
         Assert.Equal(9, context.Size);

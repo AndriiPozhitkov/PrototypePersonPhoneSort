@@ -6,7 +6,7 @@ public sealed class InputFileBuffer
 {
     private readonly Context _context;
     private readonly FillBufferStrategy _fillBuffer;
-    private readonly NextLineStrategy _nextLine;
+    private readonly NextRecordStrategy _nextRecord;
 
     public InputFileBuffer(int size)
     {
@@ -15,11 +15,11 @@ public sealed class InputFileBuffer
 
         _context = new(size);
         _fillBuffer = new(_context);
-        _nextLine = new(_context);
+        _nextRecord = new(_context);
     }
 
-    public int NextLineIndex() =>
-        _nextLine.Index();
+    public bool ScanNextRecord() =>
+        _nextRecord.Scan();
 
     public Task<bool> Read(IReader reader) =>
         _fillBuffer.Read(reader);
