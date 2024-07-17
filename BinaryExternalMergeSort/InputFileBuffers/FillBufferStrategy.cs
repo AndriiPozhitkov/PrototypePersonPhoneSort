@@ -6,6 +6,7 @@ public sealed class FillBufferStrategy(Context context)
 
     public async Task Read(IReader reader)
     {
+        context.ReadNumber++;
         CopyPartialLineToStart();
         await FillBuffer(reader);
     }
