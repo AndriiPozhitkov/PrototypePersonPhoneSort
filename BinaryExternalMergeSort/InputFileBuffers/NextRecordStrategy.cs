@@ -5,7 +5,7 @@ public sealed class NextRecordStrategy(Context context)
     private const byte CR = 0x0D; // 13 \r
     private const byte LF = 0x0A; // 10 \n
 
-    private int _bufferItemIndex;
+    private int _bufferSymbolIndex;
     private int _expectedReadNumber;
     private State _state;
 
@@ -45,7 +45,7 @@ public sealed class NextRecordStrategy(Context context)
 
     private bool None_Filled_Buffer()
     {
-        _bufferItemIndex = 1;
+        _bufferSymbolIndex = 1;
         var symbol = context.Buffer[0];
         if (IsEOL(symbol))
         {
@@ -76,14 +76,14 @@ public sealed class NextRecordStrategy(Context context)
     private bool SeekEndOfLine()
     {
         var buffer = context.Buffer;
-        for (; _bufferItemIndex < context.Size; _bufferItemIndex++)
+        for (; _bufferSymbolIndex < context.Size; _bufferSymbolIndex++)
         {
-            var symbol = buffer[_bufferItemIndex];
+            var symbol = buffer[_bufferSymbolIndex];
             if (IsEOL(symbol))
             {
                 _state = State.EndOfLine;
                 context.RecordBegin = context.NextRecordBegin;
-                context.RecordEnd = _bufferItemIndex - 1;
+                context.RecordEnd = _bufferSymbolIndex - 1;
                 return true;
             }
         }
@@ -93,13 +93,13 @@ public sealed class NextRecordStrategy(Context context)
     private bool EndOfLine()
     {
         var buffer = context.Buffer;
-        for (; _bufferItemIndex < context.Size; _bufferItemIndex++)
+        for (; _bufferSymbolIndex < context.Size; _bufferSymbolIndex++)
         {
-            var symbol = buffer[_bufferItemIndex];
+            var symbol = buffer[_bufferSymbolIndex];
             if (IsNotEOL(symbol))
             {
                 _state = State.SeekEndOfLine;
-                context.NextRecordBegin = _bufferItemIndex;
+                context.NextRecordBegin = _bufferSymbolIndex;
                 return SeekEndOfLine();
             }
         }

@@ -11,14 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="StubReaderPersons003Csv.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>StubReaderPersons003Csv.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,13 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="persons_003.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="StubReaderPersons003Csv.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>StubReaderPersons003Csv.cs</LastGenOutput>
-    </None>
     <None Update="TextTemplate1.txt">
       <DependentUpon>TextTemplate1.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -56,14 +41,6 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="StubReaderPersons003Csv.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>StubReaderPersons003Csv.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
 
 </Project>
