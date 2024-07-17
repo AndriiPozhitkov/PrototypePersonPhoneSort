@@ -2,14 +2,14 @@
 
 namespace BinaryExternalMergeSort.Test.InputFileBuffers;
 
-public class FillBufferStrategyTest
+public class BufferStrategyTest
 {
     [Fact]
     public async Task Read_buffer_half_line_Readed_half_line()
     {
         using var reader = StubReader.Lines(1);
         var context = new Context(reader.HalfLine());
-        var sut = new FillBufferStrategy(context);
+        var sut = new BufferStrategy(context);
 
         context.NextRecordBegin = 0;
         await sut.Read(reader);
@@ -23,7 +23,7 @@ public class FillBufferStrategyTest
     {
         using var reader = StubReader.Lines(1);
         var context = new Context(reader.OneAndHalfLine());
-        var sut = new FillBufferStrategy(context);
+        var sut = new BufferStrategy(context);
 
         context.NextRecordBegin = 0;
         await sut.Read(reader);
@@ -37,7 +37,7 @@ public class FillBufferStrategyTest
     {
         using var reader = StubReader.Lines(2);
         var context = new Context(reader.OneAndHalfLine());
-        var sut = new FillBufferStrategy(context);
+        var sut = new BufferStrategy(context);
 
         context.NextRecordBegin = 0;
         await sut.Read(reader);
@@ -51,7 +51,7 @@ public class FillBufferStrategyTest
     {
         using var reader = StubReader.Lines(2);
         var context = new Context(reader.OneAndHalfLine());
-        var sut = new FillBufferStrategy(context);
+        var sut = new BufferStrategy(context);
 
         context.NextRecordBegin = 0;
         await sut.Read(reader);

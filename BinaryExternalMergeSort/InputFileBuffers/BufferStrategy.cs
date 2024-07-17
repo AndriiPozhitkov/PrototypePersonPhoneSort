@@ -1,6 +1,6 @@
 ﻿namespace BinaryExternalMergeSort.InputFileBuffers;
 
-public sealed class FillBufferStrategy(Context context)
+public sealed class BufferStrategy(Context context)
 {
     private int _offset;
 

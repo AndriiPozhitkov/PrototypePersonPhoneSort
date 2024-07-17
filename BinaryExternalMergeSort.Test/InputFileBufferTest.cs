@@ -1,9 +1,9 @@
+using BinaryExternalMergeSort.InputFileBuffers;
+
 namespace BinaryExternalMergeSort.Test;
 
 public class InputFileBufferTest
 {
-    private const int EndOfBuffer = -1;
-
     [Fact]
     public void Constructor_size_less_1_Throws()
     {
@@ -12,7 +12,7 @@ public class InputFileBufferTest
     }
 
     [Fact]
-    public async Task NextLineIndex()
+    public async Task ScanNextRecord()
     {
         using var reader = StubReader.Lines(
             "L0;F0;M0;P0",
@@ -21,21 +21,59 @@ public class InputFileBufferTest
 
         var sut = new InputFileBuffer(reader.OneAndHalfLine());
 
-        //Assert.True(await sut.Read(reader));
-        //Assert.Equal(0, sut.NextLineIndex());
-        //Assert.Equal(13, sut.NextLineIndex());
-        //Assert.Equal(EndOfBuffer, sut.NextLineIndex());
+        // read 1
+        Assert.True(await sut.Read(reader));
+        Assert.Equal(Context.IndexNone, sut.TestRecordBegin());
+        Assert.Equal(Context.IndexNone, sut.TestRecordEnd());
 
-        //Assert.True(await sut.Read(reader));
-        //Assert.Equal(0, sut.NextLineIndex());
-        //Assert.Equal(17, sut.NextLineIndex());
-        //Assert.Equal(EndOfBuffer, sut.NextLineIndex());
+        // scan 1 1
+        Assert.True(sut.ScanNextRecord());
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(10, sut.TestRecordEnd());
 
-        //Assert.True(await sut.Read(reader));
-        //Assert.Equal(0, sut.NextLineIndex());
-        //Assert.Equal(EndOfBuffer, sut.NextLineIndex());
+        // scan 1 2
+        Assert.False(sut.ScanNextRecord());
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(10, sut.TestRecordEnd());
 
-        //Assert.False(await sut.Read(reader));
-        //Assert.Equal(EndOfBuffer, sut.NextLineIndex());
+        // read 2
+        Assert.True(await sut.Read(reader));
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(10, sut.TestRecordEnd());
+
+        // scan 2 1
+        Assert.True(sut.ScanNextRecord());
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(14, sut.TestRecordEnd());
+
+        // scan 2 2
+        Assert.False(sut.ScanNextRecord());
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(14, sut.TestRecordEnd());
+
+        // read 3
+        Assert.True(await sut.Read(reader));
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(14, sut.TestRecordEnd());
+
+        // scan 3 1
+        Assert.True(sut.ScanNextRecord());
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(18, sut.TestRecordEnd());
+
+        // scan 3 2
+        Assert.False(sut.ScanNextRecord());
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(18, sut.TestRecordEnd());
+
+        // read 4
+        Assert.False(await sut.Read(reader));
+        Assert.Equal(0, sut.TestRecordBegin());
+        Assert.Equal(18, sut.TestRecordEnd());
+
+        // scan 4 1
+        Assert.False(sut.ScanNextRecord());
+        Assert.Equal(Context.IndexNone, sut.TestRecordBegin());
+        Assert.Equal(Context.IndexNone, sut.TestRecordEnd());
     }
 }
