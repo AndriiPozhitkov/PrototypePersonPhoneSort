@@ -4,11 +4,11 @@ public sealed class FillBufferStrategy(Context context)
 {
     private int _offset;
 
-    public async Task Read(IReader reader)
+    public async Task<bool> Read(IReader reader)
     {
         context.ReadNumber++;
         CopyPartialLineToStart();
-        await FillBuffer(reader);
+        return await FillBuffer(reader);
     }
 
     private void CopyPartialLineToStart()
@@ -26,11 +26,12 @@ public sealed class FillBufferStrategy(Context context)
         }
     }
 
-    private async Task FillBuffer(IReader reader)
+    private async Task<bool> FillBuffer(IReader reader)
     {
         var buffer = context.Buffer;
         var readCount = buffer.Length - _offset;
         var readed = await reader.Read(buffer, _offset, readCount);
         context.Size = _offset + readed;
+        return readed > 0;
     }
 }

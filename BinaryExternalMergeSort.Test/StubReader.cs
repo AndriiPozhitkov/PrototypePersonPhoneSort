@@ -46,8 +46,6 @@ internal sealed class StubReader : IReader
 
         using var memory = new MemoryStream();
         using var w = new StreamWriter(memory);
-        var lineSize = 0;
-
         for (int i = 0; i < count; i++)
         {
             n = i - 1;
@@ -62,7 +60,22 @@ internal sealed class StubReader : IReader
             w.Write(LF);
         }
         w.Flush();
-        lineSize = (int)(memory.Length / count);
+        var lineSize = (int)(memory.Length / count);
+        return new(memory.ToArray(), lineSize);
+    }
+
+    internal static StubReader Lines(params string[] lines)
+    {
+        using var memory = new MemoryStream();
+        using var w = new StreamWriter(memory);
+        foreach(var line in lines)
+        {
+            w.Write(line);
+            w.Write(CR);
+            w.Write(LF);
+        }
+        w.Flush();
+        var lineSize = (int)(memory.Length / lines.Length);
         return new(memory.ToArray(), lineSize);
     }
 

@@ -4,7 +4,7 @@ public sealed class NextLineStrategy(Context context)
 {
     private const byte CR = 0x0D; // 13 \r
     private const byte LF = 0x0A; // 10 \n
-    private const int EOL = -1;
+    private const int EndOfBuffer = -1;
 
     private int _bufferItemIndex;
     private int _expectedReadNumber;
@@ -14,8 +14,8 @@ public sealed class NextLineStrategy(Context context)
     {
         None,
         Line,
-        SeekEOL,
-        EOL
+        SeekEndOfLine,
+        EndOfLine
     }
 
     public int Index()
@@ -37,7 +37,7 @@ public sealed class NextLineStrategy(Context context)
     {
         State.None => None(),
         State.Line => Line(),
-        _ => EOL,
+        _ => EndOfBuffer,
     };
 
     private int None()
@@ -52,29 +52,29 @@ public sealed class NextLineStrategy(Context context)
         else
         {
             context.LastLineBegin = 0;
-            return EOL;
+            return EndOfBuffer;
         }
     }
 
     private int Line()
     {
         var buffer = context.Buffer;
-        _state = State.SeekEOL;
+        _state = State.SeekEndOfLine;
         for (; _bufferItemIndex < context.Size; _bufferItemIndex++)
         {
             var symbol = buffer[_bufferItemIndex];
             var symbolIsEOL = symbol == CR || symbol == LF;
-            if (_state == State.SeekEOL && symbolIsEOL)
+            if (_state == State.SeekEndOfLine && symbolIsEOL)
             {
-                _state = State.EOL;
+                _state = State.EndOfLine;
             }
-            else if (_state == State.EOL && !symbolIsEOL)
+            else if (_state == State.EndOfLine && !symbolIsEOL)
             {
                 _state = State.Line;
                 context.LastLineBegin = _bufferItemIndex;
                 return _bufferItemIndex;
             }
         }
-        return EOL;
+        return EndOfBuffer;
     }
 }

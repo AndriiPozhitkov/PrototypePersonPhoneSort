@@ -4,8 +4,6 @@ namespace BinaryExternalMergeSort;
 
 public sealed class InputFileBuffer
 {
-    public const int MinBuffer = 4096;
-
     private readonly Context _context;
     private readonly FillBufferStrategy _fillBuffer;
     private readonly NextLineStrategy _nextLine;
@@ -13,7 +11,7 @@ public sealed class InputFileBuffer
     public InputFileBuffer(int size)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(
-            size, MinBuffer, nameof(size));
+            size, 1, nameof(size));
 
         _context = new(size);
         _fillBuffer = new(_context);
@@ -23,6 +21,6 @@ public sealed class InputFileBuffer
     public int NextLineIndex() =>
         _nextLine.Index();
 
-    public Task Read(IReader reader) =>
+    public Task<bool> Read(IReader reader) =>
         _fillBuffer.Read(reader);
 }

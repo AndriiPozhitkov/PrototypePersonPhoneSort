@@ -2,32 +2,40 @@ namespace BinaryExternalMergeSort.Test;
 
 public class InputFileBufferTest
 {
-    [Fact]
-    public void Constructor_size_less_4k_Throws()
-    {
-        var actual = Assert.Throws<ArgumentOutOfRangeException>(
-            () => new InputFileBuffer(InputFileBuffer.MinBuffer - 1));
+    private const int EndOfBuffer = -1;
 
-        Assert.Equal("size", actual.ParamName);
+    [Fact]
+    public void Constructor_size_less_1_Throws()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => new InputFileBuffer(0));
     }
 
     [Fact]
-    public async Task NextLineIndex_readed_line()
+    public async Task NextLineIndex()
     {
-        using var reader = new StubReaderPersons003Csv();
-        var sut = new InputFileBuffer(InputFileBuffer.MinBuffer);
-        await sut.Read(reader);
+        using var reader = StubReader.Lines(
+            "L0;F0;M0;P0",
+            "L11;F11;M11;P11",
+            "L222;F222;M222;P222");
 
-        sut.NextLineIndex();
-        Assert.Equal(39, sut.NextLineIndex());
-    }
+        var sut = new InputFileBuffer(reader.OneAndHalfLine());
 
-    public async Task Read()
-    {
-        //using var reader = new StubReaderPersons003Csv();
-        //var sut = new InputFileBuffer(InputFileBuffer.MinBuffer);
-        //await sut.Read(reader);
-        //Assert.Equal(0x37, sut.TestByte(63));
+        Assert.True(await sut.Read(reader));
+        Assert.Equal(0, sut.NextLineIndex());
+        Assert.Equal(13, sut.NextLineIndex());
+        Assert.Equal(EndOfBuffer, sut.NextLineIndex());
 
+        Assert.True(await sut.Read(reader));
+        Assert.Equal(0, sut.NextLineIndex());
+        Assert.Equal(17, sut.NextLineIndex());
+        Assert.Equal(EndOfBuffer, sut.NextLineIndex());
+
+        Assert.True(await sut.Read(reader));
+        Assert.Equal(0, sut.NextLineIndex());
+        Assert.Equal(EndOfBuffer, sut.NextLineIndex());
+
+        Assert.False(await sut.Read(reader));
+        Assert.Equal(EndOfBuffer, sut.NextLineIndex());
     }
 }
