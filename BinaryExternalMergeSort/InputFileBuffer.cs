@@ -25,6 +25,4 @@ public sealed class InputFileBuffer
 
     public Task Read(IReader reader) =>
         _fillBuffer.Read(reader);
-
-    public byte TestByte(int index) => _context.TestByte(index);
 }
