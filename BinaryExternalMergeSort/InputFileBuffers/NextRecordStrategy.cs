@@ -2,9 +2,6 @@
 
 public sealed class NextRecordStrategy(Context context)
 {
-    private const byte CR = 0x0D; // 13 \r
-    private const byte LF = 0x0A; // 10 \n
-
     private int _bufferSymbolIndex;
     private int _expectedReadNumber;
     private State _state;
@@ -47,7 +44,7 @@ public sealed class NextRecordStrategy(Context context)
     {
         _bufferSymbolIndex = 1;
         var symbol = context.Buffer[0];
-        if (IsEOL(symbol))
+        if (symbol.IsEOL())
         {
             _state = State.EndOfLine;
             context.RecordBegin = Context.IndexNone;
@@ -79,7 +76,7 @@ public sealed class NextRecordStrategy(Context context)
         for (; _bufferSymbolIndex < context.Size; _bufferSymbolIndex++)
         {
             var symbol = buffer[_bufferSymbolIndex];
-            if (IsEOL(symbol))
+            if (symbol.IsEOL())
             {
                 _state = State.EndOfLine;
                 context.RecordBegin = context.NextRecordBegin;
@@ -96,7 +93,7 @@ public sealed class NextRecordStrategy(Context context)
         for (; _bufferSymbolIndex < context.Size; _bufferSymbolIndex++)
         {
             var symbol = buffer[_bufferSymbolIndex];
-            if (IsNotEOL(symbol))
+            if (symbol.IsNotEOL())
             {
                 _state = State.SeekEndOfLine;
                 context.NextRecordBegin = _bufferSymbolIndex;
@@ -105,10 +102,4 @@ public sealed class NextRecordStrategy(Context context)
         }
         return false;
     }
-
-    private static bool IsEOL(byte symbol) =>
-        symbol == CR || symbol == LF;
-
-    private static bool IsNotEOL(byte symbol) =>
-        symbol != CR && symbol != LF;
 }

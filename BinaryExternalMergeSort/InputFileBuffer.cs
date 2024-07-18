@@ -2,10 +2,10 @@
 
 namespace BinaryExternalMergeSort;
 
-public sealed class InputFileBuffer
+public sealed class InputFileBuffer : IRecordsPoolBuffer
 {
-    private readonly Context _context;
     private readonly BufferStrategy _buffer;
+    private readonly Context _context;
     private readonly NextRecordStrategy _nextRecord;
 
     public InputFileBuffer(int size)
@@ -18,11 +18,25 @@ public sealed class InputFileBuffer
         _nextRecord = new(_context);
     }
 
+    public int Compare(Record x, Record y) => x.Compare(_context.Buffer, y);
+
     public Task<bool> Read(IReader reader) => _buffer.Read(reader);
+
+    public int RecordBegin() => _context.RecordBegin;
+
+    public int RecordEnd() => _context.RecordEnd;
 
     public bool ScanNextRecord() => _nextRecord.Scan();
 
-    public int TestRecordBegin() => _context.RecordBegin;
+    public Task Write(int recordBegin, IWriter writer)
+    {
+        var buffer = _context.Buffer;
+        var recordEnd = recordBegin;
 
-    public int TestRecordEnd() => _context.RecordEnd;
+        for (; recordEnd < buffer.Length; recordEnd++)
+            if (buffer[recordEnd].IsEOL()) break;
+
+        var recordSize = recordEnd - recordBegin + 1;
+        return writer.Write(buffer, recordBegin, recordSize);
+    }
 }
