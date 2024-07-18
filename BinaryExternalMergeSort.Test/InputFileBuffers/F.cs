@@ -4,6 +4,16 @@ namespace BinaryExternalMergeSort.Test.InputFileBuffers;
 
 internal static class F
 {
+    internal static byte[] Buffer(string buffer)
+    {
+        var destination = new byte[buffer.Length];
+
+        for (var i = 0; i < buffer.Length; i++)
+            destination[i] = (byte)buffer[i];
+
+        return destination;
+    }
+
     internal static Context Context(string buffer)
     {
         var source = buffer.Select(a => (byte)a).ToArray();
