@@ -78,11 +78,29 @@ public sealed class NextRecordStrategy(Context context)
             var symbol = buffer[_bufferSymbolIndex];
             if (symbol.IsEOL())
             {
-                _state = State.EndOfLine;
-                context.RecordBegin = context.NextRecordBegin;
-                context.RecordEnd = _bufferSymbolIndex - 1;
-                return true;
+                return FoundEndOfLine();
             }
+        }
+        return IsLastLineWithoutEOL();
+    }
+
+    private bool FoundEndOfLine()
+    {
+        _state = State.EndOfLine;
+        context.RecordBegin = context.NextRecordBegin;
+        context.RecordEnd = _bufferSymbolIndex - 1;
+        return true;
+    }
+
+    private bool IsLastLineWithoutEOL()
+    {
+        if (context.Size < context.Buffer.Length)
+        {
+            return FoundEndOfLine();
+        }
+        if (context.EndOfFile)
+        {
+            return FoundEndOfLine();
         }
         return false;
     }

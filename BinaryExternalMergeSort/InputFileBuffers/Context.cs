@@ -6,6 +6,7 @@ public sealed class Context(int capacity)
 
     public readonly byte[] Buffer = new byte[capacity];
 
+    public bool EndOfFile;
     public int NextRecordBegin = IndexNone;
     public int ReadNumber;
     public int RecordBegin = IndexNone;

@@ -19,6 +19,8 @@ internal sealed class StubReader : IReader
 
     public void Dispose() => _buffer = [];
 
+    public bool EndOfFile() => _index >= _buffer.Length;
+
     public Task<int> Read(byte[] buffer, int offset, int count)
     {
         var readed = 0;
@@ -68,11 +70,31 @@ internal sealed class StubReader : IReader
     {
         using var memory = new MemoryStream();
         using var w = new StreamWriter(memory);
-        foreach(var line in lines)
+        foreach (var line in lines)
         {
             w.Write(line);
             w.Write(CR);
             w.Write(LF);
+        }
+        w.Flush();
+        var lineSize = (int)(memory.Length / lines.Length);
+        return new(memory.ToArray(), lineSize);
+    }
+
+    internal static StubReader LinesLastWoEOL(params string[] lines)
+    {
+        using var memory = new MemoryStream();
+        using var w = new StreamWriter(memory);
+        var i = 0;
+        for (; i < lines.Length - 1; i++)
+        {
+            w.Write(lines[i]);
+            w.Write(CR);
+            w.Write(LF);
+        }
+        if (i < lines.Length)
+        {
+            w.Write(lines[i]);
         }
         w.Flush();
         var lineSize = (int)(memory.Length / lines.Length);
@@ -84,4 +106,8 @@ internal sealed class StubReader : IReader
     internal int OneAndHalfLine() => _lineSize * 3 / 2;
 
     internal int OneLine() => _lineSize;
+
+    internal int SameSize() => _buffer.Length;
+
+    internal int TenLines() => 10 * _lineSize;
 }

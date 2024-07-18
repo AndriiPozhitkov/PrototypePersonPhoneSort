@@ -32,6 +32,7 @@ public sealed class BufferStrategy(Context context)
         var readCount = buffer.Length - _offset;
         var readed = await reader.Read(buffer, _offset, readCount);
         context.Size = _offset + readed;
+        context.EndOfFile = reader.EndOfFile();
         return readed > 0;
     }
 }
