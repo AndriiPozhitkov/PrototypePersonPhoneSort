@@ -14,9 +14,7 @@ public struct Record(int begin)
     {
     }
 
-    public readonly int Begin => _begin;
-
-    public int Compare(byte[] buffer, Record y)
+    public readonly int Compare(byte[] buffer, Record y)
     {
         const int EOL = -1;
         var N = buffer.Length;
@@ -59,9 +57,19 @@ public struct Record(int begin)
     public void SetBegin(IRecordBuffer buffer) =>
         _begin = buffer.RecordBegin();
 
-    public readonly async Task Write(IRecordBuffer buffer, IWriter writer)
+    public readonly async Task Write(byte[] buffer, IWriter writer)
     {
-        await buffer.Write(_begin, writer);
+        await writer.Write(buffer, _begin, RecordSize(buffer));
         await writer.WriteEOL();
+    }
+
+    private readonly int RecordSize(byte[] buffer)
+    {
+        var end = _begin;
+
+        for (; end < buffer.Length; end++)
+            if (buffer[end].IsEOL()) break;
+
+        return end - _begin + 1;
     }
 }

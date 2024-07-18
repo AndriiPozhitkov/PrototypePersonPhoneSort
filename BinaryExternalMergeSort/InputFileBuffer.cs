@@ -28,15 +28,6 @@ public sealed class InputFileBuffer : IRecordsPoolBuffer
 
     public bool ScanNextRecord() => _nextRecord.Scan();
 
-    public Task Write(int recordBegin, IWriter writer)
-    {
-        var buffer = _context.Buffer;
-        var recordEnd = recordBegin;
-
-        for (; recordEnd < buffer.Length; recordEnd++)
-            if (buffer[recordEnd].IsEOL()) break;
-
-        var recordSize = recordEnd - recordBegin + 1;
-        return writer.Write(buffer, recordBegin, recordSize);
-    }
+    public Task Write(Record record, IWriter writer) =>
+        record.Write(_context.Buffer, writer);
 }

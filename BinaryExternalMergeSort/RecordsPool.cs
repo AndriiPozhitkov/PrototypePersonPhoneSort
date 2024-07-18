@@ -35,6 +35,6 @@ public sealed class RecordsPool(IRecordsPoolBuffer buffer)
     public async Task WriteChunk(IWriter writer)
     {
         for (var i = 0; i < _chunkRecordsCount; i++)
-            await _records[i].Write(buffer, writer);
+            await buffer.Write(_records[i], writer);
     }
 }
