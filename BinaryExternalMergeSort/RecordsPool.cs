@@ -1,11 +1,13 @@
 ﻿namespace BinaryExternalMergeSort;
 
-public sealed class RecordsPool(IRecordsPoolBuffer buffer)
+public sealed class RecordsPool(IRecordsPoolBuffer buffer) : IRecordsPool
 {
     private readonly List<Record> _records = [];
     private int _chunkRecordsCount = 0;
 
-    public async Task ReadChunk(IReader reader)
+    public bool NotEmpty() => _chunkRecordsCount > 0;
+
+    public async Task<IChunk> ReadChunk(IReader reader)
     {
         if (await buffer.Read(reader))
         {
@@ -28,11 +30,13 @@ public sealed class RecordsPool(IRecordsPoolBuffer buffer)
         {
             _chunkRecordsCount = 0;
         }
+        // TODO _records.TrimExcess(); ?
+        return this;
     }
 
-    public void SortChunk() => _records.Sort(0, _chunkRecordsCount, buffer);
+    public void Sort() => _records.Sort(0, _chunkRecordsCount, buffer);
 
-    public async Task WriteChunk(IWriter writer)
+    public async Task Write(IWriter writer)
     {
         for (var i = 0; i < _chunkRecordsCount; i++)
             await buffer.Write(_records[i], writer);
