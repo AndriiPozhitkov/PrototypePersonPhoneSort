@@ -7,19 +7,21 @@ public sealed class ChunkFile : IDisposable
     private readonly FileInfo _file;
     private readonly IReaderFactory _readerFactory;
     private readonly IWriterFactory _writerFactory;
-    private readonly Record _record;
-    private IReader _reader;
+    private readonly IChunkFileRecord _record;
+
     private bool _canReadNext;
+    private IReader _reader;
 
     public ChunkFile(
         FileInfo file,
         IReaderFactory readerFactory,
+        IChunkFileRecord record,
         IWriterFactory writerFactory)
     {
         _file = file;
         _readerFactory = readerFactory;
         _writerFactory = writerFactory;
-        _record = new();
+        _record = record;
         _reader = EmptyReader;
         _canReadNext = true;
     }
