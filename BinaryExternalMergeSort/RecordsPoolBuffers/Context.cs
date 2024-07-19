@@ -1,4 +1,4 @@
-﻿namespace BinaryExternalMergeSort.InputFileBuffers;
+﻿namespace BinaryExternalMergeSort.RecordsPoolBuffers;
 
 public sealed class Context(int capacity)
 {

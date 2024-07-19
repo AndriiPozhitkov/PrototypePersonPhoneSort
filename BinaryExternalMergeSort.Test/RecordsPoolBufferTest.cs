@@ -1,14 +1,14 @@
-using BinaryExternalMergeSort.InputFileBuffers;
+using BinaryExternalMergeSort.RecordsPoolBuffers;
 
 namespace BinaryExternalMergeSort.Test;
 
-public class InputFileBufferTest
+public class RecordsPoolBufferTest
 {
     [Fact]
     public void Constructor_size_less_1_Throws()
     {
         Assert.Throws<ArgumentOutOfRangeException>(
-            () => new InputFileBuffer(0));
+            () => new RecordsPoolBuffer(0));
     }
 
     [Fact]
@@ -19,7 +19,7 @@ public class InputFileBufferTest
             "L11;F11;M11;P11",
             "L222;F222;M222;P222");
 
-        var sut = new InputFileBuffer(reader.OneAndHalfLine());
+        var sut = new RecordsPoolBuffer(reader.OneAndHalfLine());
 
         // read 1
         Assert.True(await sut.Read(reader));
@@ -84,7 +84,7 @@ public class InputFileBufferTest
             "L;F;M;P",
             "L1;F1;M1;P1");
 
-        var sut = new InputFileBuffer(reader.SameSize());
+        var sut = new RecordsPoolBuffer(reader.SameSize());
 
         // read 1
         Assert.True(await sut.Read(reader));
@@ -112,7 +112,7 @@ public class InputFileBufferTest
             "L;F;M;P",
             "L1;F1;M1;P1");
 
-        var sut = new InputFileBuffer(reader.TenLines());
+        var sut = new RecordsPoolBuffer(reader.TenLines());
 
         // read 1
         Assert.True(await sut.Read(reader));

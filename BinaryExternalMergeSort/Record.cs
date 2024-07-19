@@ -1,9 +1,11 @@
-﻿using BinaryExternalMergeSort.InputFileBuffers;
+﻿using BinaryExternalMergeSort.RecordsPoolBuffers;
 
 namespace BinaryExternalMergeSort;
 
 public struct Record(int begin)
 {
+    private const int EOL = -1;
+
     private int _begin = begin;
 
     public Record() : this(0)
@@ -14,31 +16,18 @@ public struct Record(int begin)
     {
     }
 
-    public readonly int Compare(byte[] buffer, Record y)
+    public readonly int Compare(byte[] buffer, Record y) =>
+        Compare(buffer, _begin, buffer, y._begin);
+
+    private static int Compare(byte[] bufferX, int xi, byte[] bufferY, int yi)
     {
-        const int EOL = -1;
-        var N = buffer.Length;
-
-        int S(int i)
-        {
-            if (i < N)
-            {
-                var s = buffer[i];
-                return s.IsEOL() ? EOL : s;
-            }
-            else return EOL;
-        }
-
-        var xi = _begin;
-        var yi = y._begin;
-
         var sx = EOL;
         var sy = EOL;
 
-        while (xi <= N && yi <= N)
+        while (xi <= bufferX.Length && yi <= bufferY.Length)
         {
-            sx = S(xi);
-            sy = S(yi);
+            sx = S(bufferX, xi);
+            sy = S(bufferY, yi);
 
             if (sx == EOL && sy == EOL) return 0;
             if (sx == EOL) return -1;
@@ -53,6 +42,19 @@ public struct Record(int begin)
 
         return 0;
     }
+
+    private static int S(byte[] buffer, int i)
+    {
+        if (i < buffer.Length)
+        {
+            var s = buffer[i];
+            return s.IsEOL() ? EOL : s;
+        }
+        else return EOL;
+    }
+
+    public readonly int Compare2(byte[] bufferX, byte[] bufferY, Record y) =>
+        Compare(bufferX, _begin, bufferY, y._begin);
 
     public void SetBegin(IRecordBuffer buffer) =>
         _begin = buffer.RecordBegin();

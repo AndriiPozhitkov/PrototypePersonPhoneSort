@@ -19,6 +19,7 @@ public sealed class ChunkFileFactory : IChunkFileFactory
     public ChunkFile CreateChunkFile()
     {
         var file = _tempFileFactory.TempFile();
-        return new(file, _readerFactory, _writerFactory);
+        var buffer = new RecordsPoolBuffer(0);
+        return new(buffer, file, _readerFactory, _writerFactory);
     }
 }

@@ -1,7 +1,7 @@
-﻿using BinaryExternalMergeSort.InputFileBuffers;
+﻿using BinaryExternalMergeSort.RecordsPoolBuffers;
 using Xunit.Sdk;
 
-namespace BinaryExternalMergeSort.Test.InputFileBuffers;
+namespace BinaryExternalMergeSort.Test.RecordsPoolBuffers;
 
 internal static class A
 {

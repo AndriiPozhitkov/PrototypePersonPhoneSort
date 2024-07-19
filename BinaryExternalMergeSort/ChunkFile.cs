@@ -6,22 +6,22 @@ public sealed class ChunkFile : IDisposable
 
     private readonly FileInfo _file;
     private readonly IReaderFactory _readerFactory;
+    private readonly ChunkFileRecord _record;
     private readonly IWriterFactory _writerFactory;
-    private readonly IChunkFileRecord _record;
 
     private bool _canReadNext;
     private IReader _reader;
 
     public ChunkFile(
+        IRecordsPoolBuffer buffer,
         FileInfo file,
         IReaderFactory readerFactory,
-        IChunkFileRecord record,
         IWriterFactory writerFactory)
     {
         _file = file;
         _readerFactory = readerFactory;
         _writerFactory = writerFactory;
-        _record = record;
+        _record = new(buffer);
         _reader = EmptyReader;
         _canReadNext = true;
     }

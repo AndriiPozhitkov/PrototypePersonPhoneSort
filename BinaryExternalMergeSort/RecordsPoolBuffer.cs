@@ -1,14 +1,14 @@
-﻿using BinaryExternalMergeSort.InputFileBuffers;
+﻿using BinaryExternalMergeSort.RecordsPoolBuffers;
 
 namespace BinaryExternalMergeSort;
 
-public sealed class InputFileBuffer : IRecordsPoolBuffer
+public sealed class RecordsPoolBuffer : IRecordsPoolBuffer
 {
     private readonly BufferStrategy _buffer;
     private readonly Context _context;
     private readonly NextRecordStrategy _nextRecord;
 
-    public InputFileBuffer(int size)
+    public RecordsPoolBuffer(int size)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(
             size, 1, nameof(size));
@@ -19,6 +19,12 @@ public sealed class InputFileBuffer : IRecordsPoolBuffer
     }
 
     public int Compare(Record x, Record y) => x.Compare(_context.Buffer, y);
+
+    public int Compare0(Record x, IRecordsPoolBuffer bufferY, Record y) =>
+        bufferY.Compare1(_context.Buffer, x, y);
+
+    public int Compare1(byte[] bufferX, Record x, Record y) =>
+        x.Compare2(bufferX, _context.Buffer, y);
 
     public Task<bool> Read(IReader reader) => _buffer.Read(reader);
 

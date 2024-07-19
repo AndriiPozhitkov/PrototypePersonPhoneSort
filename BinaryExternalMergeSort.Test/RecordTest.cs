@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using BinaryExternalMergeSort.Test.InputFileBuffers;
+using BinaryExternalMergeSort.Test.RecordsPoolBuffers;
 
 namespace BinaryExternalMergeSort.Test;
 

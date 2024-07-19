@@ -1,6 +1,6 @@
-﻿using BinaryExternalMergeSort.InputFileBuffers;
+﻿using BinaryExternalMergeSort.RecordsPoolBuffers;
 
-namespace BinaryExternalMergeSort.Test.InputFileBuffers;
+namespace BinaryExternalMergeSort.Test.RecordsPoolBuffers;
 
 public class BufferStrategyTest
 {
