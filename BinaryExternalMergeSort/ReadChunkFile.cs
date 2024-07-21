@@ -1,26 +1,23 @@
 ﻿namespace BinaryExternalMergeSort;
 
-public sealed class ChunkFile : IDisposable
+public sealed class ReadChunkFile : IDisposable
 {
     private static readonly EmptyReader EmptyReader = new();
 
     private readonly FileInfo _file;
     private readonly IReaderFactory _readerFactory;
     private readonly ChunkFileRecord _record;
-    private readonly IWriterFactory _writerFactory;
 
     private bool _canReadNext;
     private IReader _reader;
 
-    public ChunkFile(
+    public ReadChunkFile(
         IRecordsPoolBuffer buffer,
         FileInfo file,
-        IReaderFactory readerFactory,
-        IWriterFactory writerFactory)
+        IReaderFactory readerFactory)
     {
         _file = file;
         _readerFactory = readerFactory;
-        _writerFactory = writerFactory;
         _record = new(buffer);
         _reader = EmptyReader;
         _canReadNext = true;
@@ -41,7 +38,7 @@ public sealed class ChunkFile : IDisposable
     public bool IsReaded() =>
         _record.IsReaded();
 
-    public ChunkFile MinimalRecord(ChunkFile other)
+    public ReadChunkFile MinimalRecord(ReadChunkFile other)
     {
         var isReaded = IsReaded();
         if (isReaded && other.IsReaded())
@@ -65,16 +62,6 @@ public sealed class ChunkFile : IDisposable
             _canReadNext = false;
             await _record.TryRead(_reader);
         }
-    }
-
-    public async Task Write(IChunk chunk)
-    {
-        using (var writer = _writerFactory.Writer(_file))
-        {
-            await chunk.Write(writer);
-        }
-
-        _reader = _readerFactory.Reader(_file);
     }
 
     public Task WriteMinimalRecordToOutput(IWriter output)

@@ -2,5 +2,7 @@
 
 public interface IChunkFileFactory
 {
-    ChunkFile CreateChunkFile();
+    void ReadChunkFiles(List<WriteChunkFile> writes, List<ReadChunkFile> reads);
+
+    WriteChunkFile WriteChunkFile();
 }

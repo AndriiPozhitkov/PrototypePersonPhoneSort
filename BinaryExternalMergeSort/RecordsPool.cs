@@ -2,25 +2,33 @@
 
 public sealed class RecordsPool(IRecordsPoolBuffer buffer) : IRecordsPool
 {
+    private readonly IRecordsPoolBuffer _buffer = buffer;
     private readonly List<Record> _records = [];
     private int _chunkRecordsCount = 0;
+
+    public void Dispose()
+    {
+        _buffer.Dispose();
+        _records.Clear();
+        _records.TrimExcess();
+    }
 
     public bool NotEmpty() => _chunkRecordsCount > 0;
 
     public async Task<IChunk> ReadChunk(IReader reader)
     {
-        if (await buffer.Read(reader))
+        if (await _buffer.Read(reader))
         {
             var i = 0;
-            while (buffer.ScanNextRecord())
+            while (_buffer.ScanNextRecord())
             {
                 if (i < _records.Count)
                 {
-                    _records[i].SetBegin(buffer);
+                    _records[i].SetBegin(_buffer);
                 }
                 else
                 {
-                    _records.Add(new(buffer));
+                    _records.Add(new(_buffer));
                 }
                 i++;
             }
@@ -34,11 +42,11 @@ public sealed class RecordsPool(IRecordsPoolBuffer buffer) : IRecordsPool
         return this;
     }
 
-    public void Sort() => _records.Sort(0, _chunkRecordsCount, buffer);
+    public void Sort() => _records.Sort(0, _chunkRecordsCount, _buffer);
 
     public async Task Write(IWriter writer)
     {
         for (var i = 0; i < _chunkRecordsCount; i++)
-            await buffer.Write(_records[i], writer);
+            await _buffer.Write(_records[i], writer);
     }
 }

@@ -26,6 +26,11 @@ public sealed class RecordsPoolBuffer : IRecordsPoolBuffer
     public int Compare1(byte[] bufferX, Record x, Record y) =>
         x.Compare2(bufferX, _context.Buffer, y);
 
+    public void Dispose()
+    {
+        _context.Buffer = [];
+    }
+
     public Task<bool> Read(IReader reader) => _buffer.Read(reader);
 
     public int RecordBegin() => _context.RecordBegin;

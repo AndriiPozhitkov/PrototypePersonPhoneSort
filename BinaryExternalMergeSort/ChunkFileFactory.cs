@@ -2,24 +2,41 @@
 
 public sealed class ChunkFileFactory : IChunkFileFactory
 {
-    private readonly ITempFileFactory _tempFileFactory;
+    private readonly IRecordsPoolBufferFactory _bufferFactory;
     private readonly IReaderFactory _readerFactory;
+    private readonly ITempFileFactory _tempFileFactory;
     private readonly IWriterFactory _writerFactory;
 
     public ChunkFileFactory(
-        ITempFileFactory tempFileFactory,
+        IRecordsPoolBufferFactory bufferFactory,
         IReaderFactory readerFactory,
+        ITempFileFactory tempFileFactory,
         IWriterFactory writerFactory)
     {
-        _tempFileFactory = tempFileFactory;
+        _bufferFactory = bufferFactory;
         _readerFactory = readerFactory;
+        _tempFileFactory = tempFileFactory;
         _writerFactory = writerFactory;
     }
 
-    public ChunkFile CreateChunkFile()
+    public void ReadChunkFiles(
+        List<WriteChunkFile> writes,
+        List<ReadChunkFile> reads)
+    {
+        foreach (var write in writes)
+        {
+            var buffer = _bufferFactory.ChunkFileBuffer(writes.Count);
+            var read = write.ReadChunkFile(buffer, _readerFactory);
+            reads.Add(read);
+        }
+
+        writes.Clear();
+        writes.TrimExcess();
+    }
+
+    public WriteChunkFile WriteChunkFile()
     {
         var file = _tempFileFactory.TempFile();
-        var buffer = new RecordsPoolBuffer(0);
-        return new(buffer, file, _readerFactory, _writerFactory);
+        return new(file, _writerFactory);
     }
 }

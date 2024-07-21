@@ -1,6 +1,9 @@
 ﻿namespace BinaryExternalMergeSort;
 
-public interface IRecordsPoolBuffer : IComparer<Record>, IRecordBuffer
+public interface IRecordsPoolBuffer :
+    IComparer<Record>,
+    IDisposable,
+    IRecordBuffer
 {
     int Compare0(Record x, IRecordsPoolBuffer bufferY, Record y);
 

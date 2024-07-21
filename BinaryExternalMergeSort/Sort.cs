@@ -4,20 +4,19 @@ public sealed class Sort : ISort
 {
     private readonly IChunksPool _chunksPool;
     private readonly FileInfo _inputFile;
-
     private readonly FileInfo _outputFile;
-    private readonly IRecordsPool _recordsPool;
+    private readonly IRecordsPoolFactory _recordsPoolFactory;
 
     public Sort(
         IChunksPool chunksPool,
         FileInfo inputFile,
         FileInfo outputFile,
-        IRecordsPool recordsPool)
+        IRecordsPoolFactory recordsPoolFactory)
     {
         _chunksPool = chunksPool;
         _inputFile = inputFile;
         _outputFile = outputFile;
-        _recordsPool = recordsPool;
+        _recordsPoolFactory = recordsPoolFactory;
     }
 
     public void Dispose() => _chunksPool.Dispose();
@@ -30,15 +29,14 @@ public sealed class Sort : ISort
 
     public async Task CreateChunks()
     {
+        using var recordsPool = _recordsPoolFactory.RecordsPool(_inputFile);
         using var input = new FileReader(_inputFile);
-
-        var chunk = await _recordsPool.ReadChunk(input);
+        var chunk = await recordsPool.ReadChunk(input);
         while (chunk.NotEmpty())
         {
             chunk.Sort();
             await _chunksPool.CreateChunkFile(chunk);
-
-            chunk = await _recordsPool.ReadChunk(input);
+            chunk = await recordsPool.ReadChunk(input);
         }
     }
 
