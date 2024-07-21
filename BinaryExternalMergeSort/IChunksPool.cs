@@ -1,6 +1,6 @@
 ﻿namespace BinaryExternalMergeSort;
 
-public interface IChunksPool : IDisposable
+public interface IChunksPool
 {
     Task CreateChunkFile(IChunk chunk);
 

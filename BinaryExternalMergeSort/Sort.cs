@@ -19,8 +19,6 @@ public sealed class Sort : ISort
         _recordsPoolFactory = recordsPoolFactory;
     }
 
-    public void Dispose() => _chunksPool.Dispose();
-
     public async Task Execute()
     {
         await CreateChunks();

@@ -1,6 +1,6 @@
 ﻿namespace BinaryExternalMergeSort;
 
-public interface ISort : IDisposable
+public interface ISort
 {
     Task CreateChunks();
 
