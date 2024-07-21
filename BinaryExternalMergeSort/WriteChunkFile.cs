@@ -16,7 +16,7 @@ public sealed class WriteChunkFile
     public ReadChunkFile ReadChunkFile(
             IRecordsPoolBuffer buffer,
             IReaderFactory readerFactory) =>
-        new(buffer, _file, readerFactory);
+        new(buffer, _file, readerFactory.Reader(_file));
 
     public async Task Write(IChunk chunk)
     {

@@ -2,31 +2,26 @@
 
 public sealed class ReadChunkFile : IDisposable
 {
-    private static readonly EmptyReader EmptyReader = new();
-
     private readonly FileInfo _file;
-    private readonly IReaderFactory _readerFactory;
+    private readonly IReader _reader;
     private readonly ChunkFileRecord _record;
 
     private bool _canReadNext;
-    private IReader _reader;
 
     public ReadChunkFile(
         IRecordsPoolBuffer buffer,
         FileInfo file,
-        IReaderFactory readerFactory)
+        IReader reader)
     {
         _file = file;
-        _readerFactory = readerFactory;
+        _reader = reader;
         _record = new(buffer);
-        _reader = EmptyReader;
         _canReadNext = true;
     }
 
     public void Dispose()
     {
         _reader.Dispose();
-        _reader = EmptyReader;
 
         _file.Refresh();
         if (_file.Exists)
