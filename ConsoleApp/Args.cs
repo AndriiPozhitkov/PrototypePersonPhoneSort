@@ -33,11 +33,7 @@ public sealed class Args
 
     private FileInfo DefineInputFile()
     {
-        if (FirstArgIsFile())
-        {
-            return new FileInfo(_firstArg.Value);
-        }
-        else if (SecondArgIsFile())
+        if (SecondArgIsFile())
         {
             return new FileInfo(_secondArg.Value);
         }
@@ -46,13 +42,9 @@ public sealed class Args
 
     private FileInfo DefineOutputFile()
     {
-        if (FirstArgIsFile())
+        if (SecondArgIsFile())
         {
-            return DefineOutputFile(_firstArg.Value, _secondArg.Value);
-        }
-        else if (SecondArgIsFile())
-        {
-            return DefineOutputFile(_firstArg.Value, _thirdArg.Value);
+            return DefineOutputFile(_secondArg.Value, _thirdArg.Value);
         }
         return new FileInfo("TODO Second File NOT FOUND");
     }

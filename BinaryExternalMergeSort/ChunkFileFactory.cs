@@ -1,34 +1,24 @@
 ﻿namespace BinaryExternalMergeSort;
 
-public sealed class ChunkFileFactory : IChunkFileFactory
-{
-    private readonly IRecordsPoolBufferFactory _bufferFactory;
-    private readonly IReaderFactory _readerFactory;
-    private readonly ITempFileFactory _tempFileFactory;
-    private readonly IWriterFactory _writerFactory;
-
-    public ChunkFileFactory(
+public sealed class ChunkFileFactory(
         IRecordsPoolBufferFactory bufferFactory,
         IReaderFactory readerFactory,
         ITempFileFactory tempFileFactory,
-        IWriterFactory writerFactory)
-    {
-        _bufferFactory = bufferFactory;
-        _readerFactory = readerFactory;
-        _tempFileFactory = tempFileFactory;
-        _writerFactory = writerFactory;
-    }
+        IWriterFactory writerFactory) :
+    IChunkFileFactory
+{
+    private int _chunksNumber;
 
     public void ReadChunkFiles(
         List<WriteChunkFile> writes,
         List<ReadChunkFile> reads)
     {
-        _bufferFactory.ChunksCount(writes.Count);
+        bufferFactory.ChunksCount(writes.Count);
 
         foreach (var write in writes)
         {
-            var buffer = _bufferFactory.ChunkFileBuffer();
-            var read = write.ReadChunkFile(buffer, _readerFactory);
+            var buffer = bufferFactory.ChunkFileBuffer();
+            var read = write.ReadChunkFile(buffer, readerFactory);
             reads.Add(read);
         }
 
@@ -38,7 +28,8 @@ public sealed class ChunkFileFactory : IChunkFileFactory
 
     public WriteChunkFile WriteChunkFile()
     {
-        var file = _tempFileFactory.TempFile();
-        return new(file, _writerFactory);
+        _chunksNumber++;
+        var file = tempFileFactory.TempFile();
+        return new(file, _chunksNumber, writerFactory);
     }
 }

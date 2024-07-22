@@ -1,26 +1,18 @@
 ﻿namespace BinaryExternalMergeSort;
 
-public sealed class WriteChunkFile
+public sealed class WriteChunkFile(
+    FileInfo file,
+    int number,
+    IWriterFactory writerFactory)
 {
-    private readonly FileInfo _file;
-    private readonly IWriterFactory _writerFactory;
-
-    public WriteChunkFile(
-        FileInfo file,
-        IWriterFactory writerFactory)
-    {
-        _file = file;
-        _writerFactory = writerFactory;
-    }
-
     public ReadChunkFile ReadChunkFile(
             IRecordsPoolBuffer buffer,
             IReaderFactory readerFactory) =>
-        new(buffer, _file, readerFactory.Reader(_file));
+        new(buffer, file, number, readerFactory.Reader(file));
 
     public async Task Write(IChunk chunk)
     {
-        using var writer = _writerFactory.Writer(_file);
+        using var writer = writerFactory.Writer(file);
         await chunk.Write(writer);
     }
 }

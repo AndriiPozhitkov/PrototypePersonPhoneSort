@@ -17,7 +17,6 @@ person phone external merge sort
 
 examples:
 
-.\ppsort persons.csv
 .\ppsort sort persons.csv sorted_persons.csv
 .\ppsort scan persons.csv
 .\ppsort help

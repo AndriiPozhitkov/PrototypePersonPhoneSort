@@ -1,10 +1,14 @@
-﻿namespace BinaryExternalMergeSort;
+﻿using System.Diagnostics;
 
-public sealed class ChunkFileRecord(IRecordsPoolBuffer buffer)
+namespace BinaryExternalMergeSort;
+
+public sealed class ChunkFileRecord(
+    IRecordsPoolBuffer buffer,
+    int number)
 {
     private readonly IRecordsPoolBuffer _buffer = buffer;
-    private readonly Record _record = new();
 
+    private Record _record = new();
     private State _state;
 
     private enum State
@@ -29,6 +33,8 @@ public sealed class ChunkFileRecord(IRecordsPoolBuffer buffer)
 
     private async Task None(IReader reader)
     {
+        Debug.WriteLine($"chunk {number} read");
+
         while (await _buffer.Read(reader))
         {
             if (_buffer.ScanNextRecord())
@@ -43,7 +49,7 @@ public sealed class ChunkFileRecord(IRecordsPoolBuffer buffer)
     private void DoRecordFound()
     {
         _state = State.RecordFound;
-        _record.SetBegin(_buffer);
+        _record = new(_buffer);
     }
 
     private void DoEndOfFile()

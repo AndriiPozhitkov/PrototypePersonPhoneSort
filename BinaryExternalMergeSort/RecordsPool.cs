@@ -1,4 +1,6 @@
-﻿namespace BinaryExternalMergeSort;
+﻿using System.Diagnostics;
+
+namespace BinaryExternalMergeSort;
 
 public sealed class RecordsPool(IRecordsPoolBuffer buffer) : IRecordsPool
 {
@@ -24,7 +26,7 @@ public sealed class RecordsPool(IRecordsPoolBuffer buffer) : IRecordsPool
             {
                 if (i < _records.Count)
                 {
-                    _records[i].SetBegin(_buffer);
+                    _records[i] = new(_buffer);
                 }
                 else
                 {
@@ -38,7 +40,12 @@ public sealed class RecordsPool(IRecordsPoolBuffer buffer) : IRecordsPool
         {
             _chunkRecordsCount = 0;
         }
-        // TODO _records.TrimExcess(); ?
+
+        Debug.WriteLine($"_chunkRecordsCount: {_chunkRecordsCount}");
+        Debug.WriteLine($"_records.Capacity: {_records.Capacity}");
+        Debug.WriteLine($"_records.Count: {_records.Count}");
+
+        _records.TrimExcess();
         return this;
     }
 

@@ -27,7 +27,10 @@ public sealed class Trace : ITrace
                 (scopeLabel, workTimes) => new ScopeStat(this, scopeLabel, workTimes))
             .ToList();
 
-        WriteLine("label count min max sum avg");
+        WriteLine(string.Format(
+            "{0,-32} {1,-5} {2,-15} {3,-15} {4,-15} {5,-15}",
+            "label", "count", "min", "max", "sum", "avg"));
+
         foreach (var scope in scopes)
             scope.WriteStatistics();
     }
@@ -56,7 +59,7 @@ public sealed class Trace : ITrace
 
         public void WriteStatistics()
         {
-            _trace.WriteLine($"{_label} {_count} {_min:g} {_max:g} {_sum:g} {_avg:g}");
+            _trace.WriteLine($"{_label,-32} {_count,5:D} {_min,-15:g} {_max,-15:g} {_sum,-15:g} {_avg,-15:g}");
         }
     }
 }
