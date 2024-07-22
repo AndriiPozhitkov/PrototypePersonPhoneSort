@@ -27,9 +27,34 @@ public readonly struct Record(int begin)
         var xin = bufferX.Length;
         var yin = bufferY.Length;
 
+        while (xi < xin && yi < yin)
+        {
+            int sx = bufferX[xi];
+            if (sx == CR || sx == LF)
+            {
+                sx = EOL;
+            }
+
+            int sy = bufferY[yi];
+            if (sy == CR || sy == LF)
+            {
+                sy = EOL;
+            }
+
+            if (sx == EOL && sy == EOL) return 0;
+            if (sx == EOL) return -1;
+            if (sy == EOL) return 1;
+
+            var compare = sx - sy;
+            if (compare != 0) return compare;
+
+            xi++;
+            yi++;
+        }
+
         while (xi <= xin && yi <= yin)
         {
-            var sx = EOL;
+            int sx = EOL;
             if (xi < xin)
             {
                 sx = bufferX[xi];
@@ -39,7 +64,7 @@ public readonly struct Record(int begin)
                 }
             }
 
-            var sy = EOL;
+            int sy = EOL;
             if (yi < yin)
             {
                 sy = bufferY[yi];
@@ -53,7 +78,7 @@ public readonly struct Record(int begin)
             if (sx == EOL) return -1;
             if (sy == EOL) return 1;
 
-            int compare = sx - sy;
+            var compare = sx - sy;
             if (compare != 0) return compare;
 
             xi++;
