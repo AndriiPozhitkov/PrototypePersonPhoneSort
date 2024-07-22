@@ -21,13 +21,33 @@ public readonly struct Record(int begin)
 
     private static int Compare(byte[] bufferX, int xi, byte[] bufferY, int yi)
     {
-        var sx = EOL;
-        var sy = EOL;
+        const int CR = 0x0D; // 13 \r
+        const int LF = 0x0A; // 10 \n
 
-        while (xi <= bufferX.Length && yi <= bufferY.Length)
+        var xin = bufferX.Length;
+        var yin = bufferY.Length;
+
+        while (xi <= xin && yi <= yin)
         {
-            sx = S(bufferX, xi);
-            sy = S(bufferY, yi);
+            var sx = EOL;
+            if (xi < xin)
+            {
+                sx = bufferX[xi];
+                if (sx == CR || sx == LF)
+                {
+                    sx = EOL;
+                }
+            }
+
+            var sy = EOL;
+            if (yi < yin)
+            {
+                sy = bufferY[yi];
+                if (sy == CR || sy == LF)
+                {
+                    sy = EOL;
+                }
+            }
 
             if (sx == EOL && sy == EOL) return 0;
             if (sx == EOL) return -1;
@@ -41,16 +61,6 @@ public readonly struct Record(int begin)
         }
 
         return 0;
-    }
-
-    private static int S(byte[] buffer, int i)
-    {
-        if (i < buffer.Length)
-        {
-            var s = buffer[i];
-            return s.IsEOL() ? EOL : s;
-        }
-        else return EOL;
     }
 
     public int Compare2(byte[] bufferX, byte[] bufferY, Record y) =>
