@@ -23,9 +23,11 @@ public sealed class ChunkFileFactory : IChunkFileFactory
         List<WriteChunkFile> writes,
         List<ReadChunkFile> reads)
     {
+        _bufferFactory.ChunksCount(writes.Count);
+
         foreach (var write in writes)
         {
-            var buffer = _bufferFactory.ChunkFileBuffer(writes.Count);
+            var buffer = _bufferFactory.ChunkFileBuffer();
             var read = write.ReadChunkFile(buffer, _readerFactory);
             reads.Add(read);
         }

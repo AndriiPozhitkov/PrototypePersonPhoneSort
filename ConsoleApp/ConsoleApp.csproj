@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BinaryExternalMergeSort\BinaryExternalMergeSort.csproj" />
     <ProjectReference Include="..\ExternalMergeSort\ExternalMergeSort.csproj" />
   </ItemGroup>
 

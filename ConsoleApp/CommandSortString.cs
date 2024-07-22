@@ -2,7 +2,7 @@
 
 namespace App;
 
-public class CommandSort(Args args) : ICommand
+public class CommandSortString(Args args) : ICommand
 {
     private const long A = 75_350_016; // expected_pool_size_min 
     private int B = (int)(A * 10 / 100);
