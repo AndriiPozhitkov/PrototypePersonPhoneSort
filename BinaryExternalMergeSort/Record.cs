@@ -1,111 +1,53 @@
-﻿using BinaryExternalMergeSort.RecordsPoolBuffers;
+﻿namespace BinaryExternalMergeSort;
 
-namespace BinaryExternalMergeSort;
-
-public readonly struct Record(int begin)
+public readonly struct Record(int begin, int size)
 {
-    private const int EOL = -1;
-
     private readonly int _begin = begin;
+    private readonly int _size = size;
 
-    public Record() : this(0)
+    public Record() : this(0, 0)
     {
     }
 
-    public Record(IRecordBuffer buffer) : this(buffer.RecordBegin())
+    public Record(IRecordBuffer buffer) : this(
+        buffer.RecordBegin(),
+        buffer.RecordEnd() - buffer.RecordBegin() + 1)
     {
     }
 
     public int Compare(byte[] buffer, Record y) =>
-        Compare(buffer, _begin, buffer, y._begin);
+        Compare(buffer, _begin, _size, buffer, y._begin, y._size);
 
-    private static int Compare(byte[] bufferX, int xi, byte[] bufferY, int yi)
+    private static int Compare(byte[] xb, int xi, int xs, byte[] yb, int yi, int ys)
     {
-        const int CR = 0x0D; // 13 \r
-        const int LF = 0x0A; // 10 \n
+        var ms = Math.Min(xs, ys);
+        var xin = xi + ms;
 
-        var xin = bufferX.Length;
-        var yin = bufferY.Length;
-
-        while (xi < xin && yi < yin)
+        while (xi < xin)
         {
-            int sx = bufferX[xi];
-            if (sx == CR || sx == LF)
+            var compare = xb[xi] - yb[yi];
+
+            if (compare != 0)
             {
-                sx = EOL;
+                return compare;
             }
-
-            int sy = bufferY[yi];
-            if (sy == CR || sy == LF)
-            {
-                sy = EOL;
-            }
-
-            if (sx == EOL && sy == EOL) return 0;
-            if (sx == EOL) return -1;
-            if (sy == EOL) return 1;
-
-            var compare = sx - sy;
-            if (compare != 0) return compare;
 
             xi++;
             yi++;
         }
 
-        while (xi <= xin && yi <= yin)
-        {
-            int sx = EOL;
-            if (xi < xin)
-            {
-                sx = bufferX[xi];
-                if (sx == CR || sx == LF)
-                {
-                    sx = EOL;
-                }
-            }
-
-            int sy = EOL;
-            if (yi < yin)
-            {
-                sy = bufferY[yi];
-                if (sy == CR || sy == LF)
-                {
-                    sy = EOL;
-                }
-            }
-
-            if (sx == EOL && sy == EOL) return 0;
-            if (sx == EOL) return -1;
-            if (sy == EOL) return 1;
-
-            var compare = sx - sy;
-            if (compare != 0) return compare;
-
-            xi++;
-            yi++;
-        }
-
-        return 0;
+        if (xs == ys) return 0;
+        return xs < ys ? -1 : 1;
     }
 
     public int Compare2(byte[] bufferX, byte[] bufferY, Record y) =>
-        Compare(bufferX, _begin, bufferY, y._begin);
+        Compare(bufferX, _begin, _size, bufferY, y._begin, y._size);
 
     public override readonly string ToString() => _begin.ToString();
 
     public async Task Write(byte[] buffer, IWriter writer)
     {
-        await writer.Write(buffer, _begin, RecordSize(buffer));
+        await writer.Write(buffer, _begin, _size);
         await writer.WriteEOL();
-    }
-
-    private int RecordSize(byte[] buffer)
-    {
-        var end = _begin;
-
-        for (; end < buffer.Length; end++)
-            if (buffer[end].IsEOL()) break;
-
-        return end - _begin; // last symbol is EOL, so no (+ 1)
     }
 }

@@ -8,17 +8,17 @@ public class RecordTest
     public static TheoryData<string, Record, Record, int>
     Compare_Data => new()
     {
-        {"A\r\nA\r\n", new(0), new(3), 0},
-        {"A\r\nB\r\n", new(0), new(3), -1},
-        {"B\r\nA\r\n", new(0), new(3), 1},
-        {"A\nA\n", new(0), new(2), 0},
-        {"A\nB\n", new(0), new(2), -1},
-        {"B\nA\n", new(0), new(2), 1},
-        {"A\nA", new(0), new(2), 0},
-        {"A\nAB\n", new(0), new(2), -1},
-        {"A\nAB", new(0), new(2), -1},
-        {"AB\nA\n", new(0), new(3), 1},
-        {"AB\nA", new(0), new(3), 1},
+        {"A\r\nA\r\n", new(0, 1), new(3, 1), 0},
+        {"A\r\nB\r\n", new(0, 1), new(3, 1), -1},
+        {"B\r\nA\r\n", new(0, 1), new(3, 1), 1},
+        {"A\nA\n", new(0, 1), new(2, 1), 0},
+        {"A\nB\n", new(0, 1), new(2, 1), -1},
+        {"B\nA\n", new(0, 1), new(2, 1), 1},
+        {"A\nA", new(0, 1), new(2, 1), 0},
+        {"A\nAB\n", new(0, 1), new(2, 2), -1},
+        {"A\nAB", new(0, 1), new(2, 2), -1},
+        {"AB\nA\n", new(0, 2), new(3, 1), 1},
+        {"AB\nA", new(0, 2), new(3, 1), 1},
     };
 
     [Theory]
@@ -30,6 +30,6 @@ public class RecordTest
     public void SizeOf()
     {
         var sut = new Record();
-        Assert.Equal(4, Marshal.SizeOf(sut));
+        Assert.Equal(8, Marshal.SizeOf(sut));
     }
 }
