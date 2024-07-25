@@ -1,3 +1,13 @@
+sort binary 4GB chunk 700M compare begin-size
+label                            count min             max             sum             avg            
+IRecordsPoolFactory.RecordsPool      1 0:00:00.0033299 0:00:00.0033299 0:00:00.0033299 0:00:00.0033299
+IRecordsPool.ReadChunk               8 0:00:00.0944441 0:00:15.8037252 0:01:07.4016516 0:00:08.4252064
+IChunk.Sort                          7 0:00:04.7730937 0:01:19.6689874 0:05:42.3148778 0:00:48.9021254
+IChunk.Write                         7 0:00:12.2229469 0:01:46.9670827 0:09:28.8814228 0:01:21.2687746
+IChunksPool.CreateChunkFile          7 0:00:12.2344401 0:01:46.9801639 0:09:28.975015  0:01:21.282145 
+IChunksPool.MergeChunks              1 0:16:27.8526897 0:16:27.8526897 0:16:27.8526897 0:16:27.8526897
+ISort.Execute                        1 0:32:46.7652733 0:32:46.7652733 0:32:46.7652733 0:32:46.7652733
+
 sort binary 4GB chunk 1G
 label                            count min             max             sum             avg            
 IRecordsPoolFactory.RecordsPool      1 0:00:00.005205  0:00:00.005205  0:00:00.005205  0:00:00.005205 
