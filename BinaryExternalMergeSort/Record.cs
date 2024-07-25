@@ -29,9 +29,11 @@ public readonly struct Record : IEquatable<Record>
     public static bool operator ==(Record left, Record right) =>
         left.Equals(right);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int Compare(byte[] buffer, Record y) =>
         Compare(_begin, y._begin, _size, y._size, buffer, buffer);
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int Compare2(byte[] bufferX, byte[] bufferY, Record y) =>
         Compare(_begin, y._begin, _size, y._size, bufferX, bufferY);
 
