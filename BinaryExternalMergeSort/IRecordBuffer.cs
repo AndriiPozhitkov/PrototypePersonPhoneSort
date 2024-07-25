@@ -4,5 +4,5 @@ public interface IRecordBuffer
 {
     int RecordBegin();
 
-    int RecordEnd();
+    int RecordSize();
 }

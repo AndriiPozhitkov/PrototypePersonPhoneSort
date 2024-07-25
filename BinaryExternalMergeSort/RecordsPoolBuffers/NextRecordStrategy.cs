@@ -48,7 +48,7 @@ public sealed class NextRecordStrategy(Context context)
         {
             _state = State.EndOfLine;
             context.RecordBegin = Context.IndexNone;
-            context.RecordEnd = Context.IndexNone;
+            context.RecordSize = 0;
             context.NextRecordBegin = Context.IndexNone;
             return EndOfLine();
         }
@@ -56,7 +56,7 @@ public sealed class NextRecordStrategy(Context context)
         {
             _state = State.SeekEndOfLine;
             context.RecordBegin = 0;
-            context.RecordEnd = Context.IndexNone;
+            context.RecordSize = 0;
             context.NextRecordBegin = 0;
             return SeekEndOfLine();
         }
@@ -65,7 +65,7 @@ public sealed class NextRecordStrategy(Context context)
     private bool None_Empty_Buffer()
     {
         context.RecordBegin = Context.IndexNone;
-        context.RecordEnd = Context.IndexNone;
+        context.RecordSize = 0;
         context.NextRecordBegin = Context.IndexNone;
         return false;
     }
@@ -88,7 +88,7 @@ public sealed class NextRecordStrategy(Context context)
     {
         _state = State.EndOfLine;
         context.RecordBegin = context.NextRecordBegin;
-        context.RecordEnd = _bufferSymbolIndex - 1;
+        context.RecordSize = _bufferSymbolIndex - context.RecordBegin;
         return true;
     }
 

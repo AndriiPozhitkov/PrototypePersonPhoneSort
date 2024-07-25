@@ -13,12 +13,12 @@ public class NextRecordStrategyTest
         Assert.False(sut.Scan());
         Assert.Equal(Context.IndexNone, context.NextRecordBegin);
         Assert.Equal(Context.IndexNone, context.RecordBegin);
-        Assert.Equal(Context.IndexNone, context.RecordEnd);
+        Assert.Equal(0, context.RecordSize);
 
         Assert.False(sut.Scan());
         Assert.Equal(Context.IndexNone, context.NextRecordBegin);
         Assert.Equal(Context.IndexNone, context.RecordBegin);
-        Assert.Equal(Context.IndexNone, context.RecordEnd);
+        Assert.Equal(0, context.RecordSize);
     }
 
     [Fact]
@@ -30,12 +30,12 @@ public class NextRecordStrategyTest
         Assert.False(sut.Scan());
         Assert.Equal(0, context.NextRecordBegin);
         Assert.Equal(0, context.RecordBegin);
-        Assert.Equal(Context.IndexNone, context.RecordEnd);
+        Assert.Equal(0, context.RecordSize);
 
         Assert.False(sut.Scan());
         Assert.Equal(0, context.NextRecordBegin);
         Assert.Equal(0, context.RecordBegin);
-        Assert.Equal(Context.IndexNone, context.RecordEnd);
+        Assert.Equal(0, context.RecordSize);
     }
 
     [Fact]
@@ -47,12 +47,12 @@ public class NextRecordStrategyTest
         Assert.True(sut.Scan());
         Assert.Equal(0, context.NextRecordBegin);
         Assert.Equal(0, context.RecordBegin);
-        Assert.Equal(7, context.RecordEnd);
+        Assert.Equal(8, context.RecordSize);
 
         Assert.False(sut.Scan());
         Assert.Equal(0, context.NextRecordBegin);
         Assert.Equal(0, context.RecordBegin);
-        Assert.Equal(7, context.RecordEnd);
+        Assert.Equal(8, context.RecordSize);
     }
 
     [Fact]
@@ -64,12 +64,12 @@ public class NextRecordStrategyTest
         Assert.True(sut.Scan());
         Assert.Equal(0, context.NextRecordBegin);
         Assert.Equal(0, context.RecordBegin);
-        Assert.Equal(7, context.RecordEnd);
+        Assert.Equal(8, context.RecordSize);
 
         Assert.False(sut.Scan());
         Assert.Equal(0, context.NextRecordBegin);
         Assert.Equal(0, context.RecordBegin);
-        Assert.Equal(7, context.RecordEnd);
+        Assert.Equal(8, context.RecordSize);
     }
 
     [Fact]
@@ -81,12 +81,12 @@ public class NextRecordStrategyTest
         Assert.False(sut.Scan());
         Assert.Equal(Context.IndexNone, context.NextRecordBegin);
         Assert.Equal(Context.IndexNone, context.RecordBegin);
-        Assert.Equal(Context.IndexNone, context.RecordEnd);
+        Assert.Equal(0, context.RecordSize);
 
         Assert.False(sut.Scan());
         Assert.Equal(Context.IndexNone, context.NextRecordBegin);
         Assert.Equal(Context.IndexNone, context.RecordBegin);
-        Assert.Equal(Context.IndexNone, context.RecordEnd);
+        Assert.Equal(0, context.RecordSize);
     }
 
     [Fact]
@@ -98,12 +98,12 @@ public class NextRecordStrategyTest
         Assert.False(sut.Scan());
         Assert.Equal(2, context.NextRecordBegin);
         Assert.Equal(Context.IndexNone, context.RecordBegin);
-        Assert.Equal(Context.IndexNone, context.RecordEnd);
+        Assert.Equal(0, context.RecordSize);
 
         Assert.False(sut.Scan());
         Assert.Equal(2, context.NextRecordBegin);
         Assert.Equal(Context.IndexNone, context.RecordBegin);
-        Assert.Equal(Context.IndexNone, context.RecordEnd);
+        Assert.Equal(0, context.RecordSize);
     }
 
     [Fact]
@@ -115,12 +115,12 @@ public class NextRecordStrategyTest
         Assert.True(sut.Scan());
         Assert.Equal(2, context.NextRecordBegin);
         Assert.Equal(2, context.RecordBegin);
-        Assert.Equal(2, context.RecordEnd);
+        Assert.Equal(1, context.RecordSize);
 
         Assert.False(sut.Scan());
         Assert.Equal(2, context.NextRecordBegin);
         Assert.Equal(2, context.RecordBegin);
-        Assert.Equal(2, context.RecordEnd);
+        Assert.Equal(1, context.RecordSize);
     }
 
     [Fact]
@@ -132,16 +132,16 @@ public class NextRecordStrategyTest
         Assert.True(sut.Scan());
         Assert.Equal(0, context.NextRecordBegin);
         Assert.Equal(0, context.RecordBegin);
-        Assert.Equal(1, context.RecordEnd);
+        Assert.Equal(2, context.RecordSize);
 
         Assert.True(sut.Scan());
         Assert.Equal(4, context.NextRecordBegin);
         Assert.Equal(4, context.RecordBegin);
-        Assert.Equal(5, context.RecordEnd);
+        Assert.Equal(2, context.RecordSize);
 
         Assert.False(sut.Scan());
         Assert.Equal(4, context.NextRecordBegin);
         Assert.Equal(4, context.RecordBegin);
-        Assert.Equal(5, context.RecordEnd);
+        Assert.Equal(2, context.RecordSize);
     }
 }

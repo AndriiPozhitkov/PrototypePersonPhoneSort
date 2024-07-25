@@ -24,57 +24,57 @@ public class RecordsPoolBufferTest
         // read 1
         Assert.True(await sut.Read(reader));
         Assert.Equal(Context.IndexNone, sut.RecordBegin());
-        Assert.Equal(Context.IndexNone, sut.RecordEnd());
+        Assert.Equal(0, sut.RecordSize());
 
         // scan 1 1
         Assert.True(sut.ScanNextRecord());
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(10, sut.RecordEnd());
+        Assert.Equal(11, sut.RecordSize());
 
         // scan 1 2
         Assert.False(sut.ScanNextRecord());
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(10, sut.RecordEnd());
+        Assert.Equal(11, sut.RecordSize());
 
         // read 2
         Assert.True(await sut.Read(reader));
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(10, sut.RecordEnd());
+        Assert.Equal(11, sut.RecordSize());
 
         // scan 2 1
         Assert.True(sut.ScanNextRecord());
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(14, sut.RecordEnd());
+        Assert.Equal(15, sut.RecordSize());
 
         // scan 2 2
         Assert.False(sut.ScanNextRecord());
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(14, sut.RecordEnd());
+        Assert.Equal(15, sut.RecordSize());
 
         // read 3
         Assert.True(await sut.Read(reader));
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(14, sut.RecordEnd());
+        Assert.Equal(15, sut.RecordSize());
 
         // scan 3 1
         Assert.True(sut.ScanNextRecord());
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(18, sut.RecordEnd());
+        Assert.Equal(19, sut.RecordSize());
 
         // scan 3 2
         Assert.False(sut.ScanNextRecord());
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(18, sut.RecordEnd());
+        Assert.Equal(19, sut.RecordSize());
 
         // read 4
         Assert.False(await sut.Read(reader));
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(18, sut.RecordEnd());
+        Assert.Equal(19, sut.RecordSize());
 
         // scan 4 1
         Assert.False(sut.ScanNextRecord());
         Assert.Equal(Context.IndexNone, sut.RecordBegin());
-        Assert.Equal(Context.IndexNone, sut.RecordEnd());
+        Assert.Equal(0, sut.RecordSize());
     }
 
     [Fact]
@@ -92,17 +92,17 @@ public class RecordsPoolBufferTest
         // scan 1 1
         Assert.True(sut.ScanNextRecord());
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(6, sut.RecordEnd());
+        Assert.Equal(7, sut.RecordSize());
 
         // scan 1 2
         Assert.True(sut.ScanNextRecord());
         Assert.Equal(9, sut.RecordBegin());
-        Assert.Equal(19, sut.RecordEnd());
+        Assert.Equal(11, sut.RecordSize());
 
         // scan 1 3
         Assert.False(sut.ScanNextRecord());
         Assert.Equal(9, sut.RecordBegin());
-        Assert.Equal(19, sut.RecordEnd());
+        Assert.Equal(11, sut.RecordSize());
     }
 
     [Fact]
@@ -120,16 +120,16 @@ public class RecordsPoolBufferTest
         // scan 1 1
         Assert.True(sut.ScanNextRecord());
         Assert.Equal(0, sut.RecordBegin());
-        Assert.Equal(6, sut.RecordEnd());
+        Assert.Equal(7, sut.RecordSize());
 
         // scan 1 2
         Assert.True(sut.ScanNextRecord());
         Assert.Equal(9, sut.RecordBegin());
-        Assert.Equal(19, sut.RecordEnd());
+        Assert.Equal(11, sut.RecordSize());
 
         // scan 1 3
         Assert.False(sut.ScanNextRecord());
         Assert.Equal(9, sut.RecordBegin());
-        Assert.Equal(19, sut.RecordEnd());
+        Assert.Equal(11, sut.RecordSize());
     }
 }

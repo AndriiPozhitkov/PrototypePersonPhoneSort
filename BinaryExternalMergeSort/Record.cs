@@ -1,9 +1,11 @@
-﻿namespace BinaryExternalMergeSort;
+﻿using System.Runtime.CompilerServices;
 
-public readonly struct Record(int begin, int size)
+namespace BinaryExternalMergeSort;
+
+public readonly struct Record : IEquatable<Record>
 {
-    private readonly int _begin = begin;
-    private readonly int _size = size;
+    private readonly int _begin;
+    private readonly int _size;
 
     public Record() : this(0, 0)
     {
@@ -11,17 +13,50 @@ public readonly struct Record(int begin, int size)
 
     public Record(IRecordBuffer buffer) : this(
         buffer.RecordBegin(),
-        buffer.RecordEnd() - buffer.RecordBegin() + 1)
+        buffer.RecordSize())
     {
     }
 
-    public int Compare(byte[] buffer, Record y) =>
-        Compare(buffer, _begin, _size, buffer, y._begin, y._size);
-
-    private static int Compare(byte[] xb, int xi, int xs, byte[] yb, int yi, int ys)
+    public Record(int begin, int size)
     {
-        var ms = Math.Min(xs, ys);
-        var xin = xi + ms;
+        _begin = begin;
+        _size = size;
+    }
+
+    public static bool operator !=(Record left, Record right) =>
+        !left.Equals(right);
+
+    public static bool operator ==(Record left, Record right) =>
+        left.Equals(right);
+
+    public int Compare(byte[] buffer, Record y) =>
+        Compare(_begin, y._begin, _size, y._size, buffer, buffer);
+
+    public int Compare2(byte[] bufferX, byte[] bufferY, Record y) =>
+        Compare(_begin, y._begin, _size, y._size, bufferX, bufferY);
+
+    public override bool Equals(object? right) =>
+        right is Record record && Equals(record);
+
+    public bool Equals(Record right) =>
+        _begin == right._begin && _size == right._size;
+
+    public override int GetHashCode() =>
+        HashCode.Combine(_begin, _size);
+
+    public override readonly string ToString() =>
+        string.Concat("(", _begin.ToString(), ", ", _size.ToString(), ")");
+
+    public async Task Write(byte[] buffer, IWriter writer)
+    {
+        await writer.Write(buffer, _begin, _size);
+        await writer.WriteEOL();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static int Compare(int xi, int yi, int xs, int ys, byte[] xb, byte[] yb)
+    {
+        var xin = xi + Math.Min(xs, ys);
 
         while (xi < xin)
         {
@@ -36,18 +71,6 @@ public readonly struct Record(int begin, int size)
             yi++;
         }
 
-        if (xs == ys) return 0;
-        return xs < ys ? -1 : 1;
-    }
-
-    public int Compare2(byte[] bufferX, byte[] bufferY, Record y) =>
-        Compare(bufferX, _begin, _size, bufferY, y._begin, y._size);
-
-    public override readonly string ToString() => _begin.ToString();
-
-    public async Task Write(byte[] buffer, IWriter writer)
-    {
-        await writer.Write(buffer, _begin, _size);
-        await writer.WriteEOL();
+        return xs - ys;
     }
 }

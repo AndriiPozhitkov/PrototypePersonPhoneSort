@@ -35,7 +35,7 @@ public sealed class RecordsPoolBuffer : IRecordsPoolBuffer
 
     public int RecordBegin() => _context.RecordBegin;
 
-    public int RecordEnd() => _context.RecordEnd;
+    public int RecordSize() => _context.RecordSize;
 
     public bool ScanNextRecord() => _nextRecord.Scan();
 
