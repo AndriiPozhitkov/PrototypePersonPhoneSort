@@ -5,7 +5,13 @@ public sealed class FileWriter(FileInfo file) : IWriter
 {
     private static readonly byte[] EOL = CreateEOL();
 
-    private readonly FileStream _writer = file.OpenWrite();
+    private readonly FileStream _writer = new(
+        file.FullName,
+        FileMode.Create,
+        FileAccess.Write,
+        FileShare.None,
+        4096,
+        useAsync: true);
 
     public void Dispose() => _writer.Dispose();
 

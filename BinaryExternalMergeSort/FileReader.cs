@@ -2,7 +2,13 @@
 
 public sealed class FileReader(FileInfo file) : IReader
 {
-    private readonly FileStream _reader = file.OpenRead();
+    private readonly FileStream _reader = new(
+        file.FullName,
+        FileMode.Open,
+        FileAccess.Read,
+        FileShare.None,
+        4096,
+        useAsync: true);
 
     public void Dispose() => _reader.Dispose();
 

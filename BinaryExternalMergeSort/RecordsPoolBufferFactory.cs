@@ -3,11 +3,11 @@
 public sealed class RecordsPoolBufferFactory : IRecordsPoolBufferFactory
 {
     //private const int MaxBufferSizeByte = 1_073_741_824;
-    private const int MaxBufferSizeByte = 700_000_000;
+    //private const int MaxBufferSizeByte = 700_000_000;
     //private const int MaxBufferSizeByte = 536_870_912;
     //private const int MaxBufferSizeByte = 104_857_600;
     //private const int MaxBufferSizeByte = 10_485_760;
-    //private const int MaxBufferSizeByte = 2_097_152;
+    private const int MaxBufferSizeByte = 2_097_152;
 
     private int _bufferSizeByte = MaxBufferSizeByte;
     private int _chunkBufferSizeByte = MaxBufferSizeByte;
