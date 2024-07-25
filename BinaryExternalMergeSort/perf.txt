@@ -1,3 +1,4 @@
+# read write
 label                            count min             max             sum             avg            
 IRecordsPoolFactory.RecordsPool      1 0:00:00.002583  0:00:00.002583  0:00:00.002583  0:00:00.002583 
 IRecordsPool.ReadChunk               7 0:00:00.0105138 0:00:00.0569522 0:00:00.2611484 0:00:00.0373069
