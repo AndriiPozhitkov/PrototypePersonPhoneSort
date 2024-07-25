@@ -10,8 +10,8 @@ public sealed class FileWriter(FileInfo file) : IWriter
         FileMode.Create,
         FileAccess.Write,
         FileShare.None,
-        4096,
-        useAsync: true);
+        1_048_576,
+        FileOptions.Asynchronous | FileOptions.SequentialScan);
 
     public void Dispose() => _writer.Dispose();
 

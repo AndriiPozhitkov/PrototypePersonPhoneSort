@@ -7,8 +7,8 @@ public sealed class FileReader(FileInfo file) : IReader
         FileMode.Open,
         FileAccess.Read,
         FileShare.None,
-        4096,
-        useAsync: true);
+        1_048_576,
+        FileOptions.Asynchronous | FileOptions.SequentialScan);
 
     public void Dispose() => _reader.Dispose();
 
